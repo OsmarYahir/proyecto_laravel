@@ -1,0 +1,40 @@
+.carousel-container {
+    width: 100%;
+    height: 450px;
+    margin: 0 auto;
+    overflow: hidden; /* Esconde las imágenes que no están a la vista */
+    position: relative;
+}
+
+.carousel-slide {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out; /* La clave de la animación */
+}
+
+.event-banner {
+    min-width: 100%; /* Cada banner ocupa todo el ancho del contenedor */
+    position: relative;
+}
+
+.event-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajusta la imagen sin deformarla */
+}
+
+/* Estilo para los botones de navegación */
+#prevBtn, #nextBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#nextBtn { right: 0; }

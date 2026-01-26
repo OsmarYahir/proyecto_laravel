@@ -1,0 +1,57 @@
+.navbar {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;            
+    padding: 1rem 5%;
+    background-color: #1f262d;      
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-logo span {
+    color: #026cdf; 
+}
+
+.nav-search {
+    display: flex;
+    flex-grow: 0.5; 
+    margin: 0 2rem;
+}
+
+.nav-search input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 4px 0 0 4px;
+    border: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem; 
+}
+
+/* Quitar el subrayado y mejorar el estilo del link */
+.nav-links a, .nav-item a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+/* Efecto Hover profesional */
+.nav-links a:hover {
+    background-color: rgba(2, 108, 223, 0.2); /* Azul suave de fondo */
+    color: #026cdf; /* Cambia al azul de tu logo */
+}
