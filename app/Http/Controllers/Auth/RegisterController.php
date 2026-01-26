@@ -24,7 +24,7 @@ class RegisterController extends Controller
                 return back()->withErrors(['captcha_answer' => 'Por favor completa la verificación de seguridad'])->withInput();
             }
             
-            // Desencriptar respuesta correcta
+
             $correctAnswer = Crypt::decryptString($token);
             
             if ((string)$userAnswer !== (string)$correctAnswer) {
@@ -35,7 +35,7 @@ class RegisterController extends Controller
             return back()->withErrors(['captcha_answer' => 'Error en la verificación. Por favor recarga la página'])->withInput();
         }
 
-        // Validar los datos del formulario
+      
         $validated = $request->validate([
             'name' => 'required|string|max:255|min:3',
             'email' => 'required|string|email|max:255|unique:users',
@@ -53,7 +53,7 @@ class RegisterController extends Controller
         ]);
 
         try {
-            // Crear el usuario
+          
             User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],

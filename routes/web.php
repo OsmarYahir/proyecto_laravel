@@ -20,7 +20,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/login', [LoginController::class, 'store'])->name('login.store');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     
-    // Ruta del CAPTCHA
+    // Ruta del CAPTCHAphp artisan route:list | grep captcha
     Route::get('/captcha/generate', [CaptchaController::class, 'generate'])->name('captcha.generate');
     
     Route::get('/error', function () {

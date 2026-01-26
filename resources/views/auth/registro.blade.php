@@ -127,7 +127,7 @@
 
         document.getElementById('refresh-captcha').addEventListener('click', generateCaptcha);
         
-        // Generar CAPTCHA al cargar la página
+    
         window.addEventListener('DOMContentLoaded', generateCaptcha);
     </script>
 </body>

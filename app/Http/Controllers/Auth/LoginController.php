@@ -14,7 +14,7 @@ class LoginController extends Controller
     }
 
     public function store(Request $request) {
-        // Validar CAPTCHA primero
+       
         try {
             $userAnswer = $request->input('captcha_answer');
             $token = $request->input('captcha_token');
@@ -23,7 +23,7 @@ class LoginController extends Controller
                 return back()->withErrors(['captcha_answer' => 'Por favor completa la verificación de seguridad'])->withInput();
             }
             
-            // Desencriptar respuesta correcta
+          
             $correctAnswer = Crypt::decryptString($token);
             
             if ((string)$userAnswer !== (string)$correctAnswer) {
@@ -34,7 +34,7 @@ class LoginController extends Controller
             return back()->withErrors(['captcha_answer' => 'Error en la verificación. Por favor recarga la página'])->withInput();
         }
 
-        // Validar credenciales
+      
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -44,7 +44,7 @@ class LoginController extends Controller
             'password.required' => 'La contraseña es obligatoria',
         ]);
 
-        // Intentar autenticar
+   
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
