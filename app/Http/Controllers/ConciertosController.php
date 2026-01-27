@@ -29,7 +29,7 @@ class ConciertosController extends Controller
                 // Redirigir a la vista de error
                 return redirect()
                     ->route('error')
-                    ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
+                    ->with('error', ' Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
 
             // Validar formulario
@@ -53,7 +53,7 @@ class ConciertosController extends Controller
             ]);
 
             // SIMULACIÓN: NO se guarda en BD
-            Log::info('Reserva de concierto (PROTOTIPO - NO SE GUARDA)', [
+            Log::info('Reserva de concierto ', [
                 'nombre' => $validated['nombre'],
                 'email' => $validated['email'],
                 'telefono' => $validated['telefono'],
@@ -63,7 +63,7 @@ class ConciertosController extends Controller
             ]);
 
             // Mensaje de éxito personalizado
-            $mensaje = "¡Reserva realizada con éxito! 🎉\n\n" .
+            $mensaje = "Reserva realizada con exito\n\n" .
                       "Detalles de tu reserva:\n" .
                       "• Nombre: {$validated['nombre']}\n" .
                       "• Email: {$validated['email']}\n" .

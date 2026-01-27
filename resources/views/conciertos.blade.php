@@ -128,31 +128,31 @@
 
         <!-- Lista de Conciertos -->
         <div class="concierto">
-            <h3>🎸 Rock Festival 2026</h3>
-            <p>📅 15 de Marzo, 2026 - 20:00 hrs</p>
-            <p>📍 Foro Sol, Ciudad de México</p>
-            <p>💰 Desde $850 MXN</p>
+            <h3>Rock Festival 2026</h3>
+            <p>15 de Marzo, 2026 - 20:00 hrs</p>
+            <p>Foro Sol, Ciudad de México</p>
+            <p>Desde $850 MXN</p>
         </div>
 
         <div class="concierto">
-            <h3>🎧 Festival Electrónico</h3>
-            <p>📅 22 de Abril, 2026 - 18:00 hrs</p>
-            <p>📍 Arena Guadalajara, Jalisco</p>
-            <p>💰 Desde $650 MXN</p>
+            <h3>Festival Electrónico</h3>
+            <p>22 de Abril, 2026 - 18:00 hrs</p>
+            <p>Arena Guadalajara, Jalisco</p>
+            <p>Desde $650 MXN</p>
         </div>
 
         <div class="concierto">
-            <h3>🎼 Concierto Sinfónico</h3>
-            <p>📅 5 de Mayo, 2026 - 19:00 hrs</p>
-            <p>📍 Auditorio Nacional, CDMX</p>
-            <p>💰 Desde $450 MXN</p>
+            <h3>Concierto Sinfónico</h3>
+            <p>5 de Mayo, 2026 - 19:00 hrs</p>
+            <p>Auditorio Nacional, CDMX</p>
+            <p>Desde $450 MXN</p>
         </div>
 
         <div class="concierto">
-            <h3>🎤 Pop Latino Tour</h3>
-            <p>📅 18 de Junio, 2026 - 21:00 hrs</p>
-            <p>📍 Estadio Monterrey, Nuevo León</p>
-            <p>💰 Desde $950 MXN</p>
+            <h3>Pop Latino Tour</h3>
+            <p>18 de Junio, 2026 - 21:00 hrs</p>
+            <p>Estadio Monterrey, Nuevo León</p>
+            <p>Desde $950 MXN</p>
         </div>
 
         <!-- Formulario de Reserva -->
@@ -160,7 +160,7 @@
             <h2>Reserva tu boleto</h2>
             
             <div class="warning">
-                ⚠️ <strong>Prototipo:</strong> Este formulario NO guarda en base de datos
+                 <strong></strong> Este formulario NO guarda en base de datos
             </div>
 
             @if (session('success'))

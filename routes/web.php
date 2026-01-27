@@ -26,3 +26,10 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 Route::get('/error', function () {
     return view('error');
 })->name('error');
+
+// Ruta catch-all para 404 (DEBE IR AL FINAL)
+Route::fallback(function () {
+    return redirect()
+        ->route('error')
+        ->with('error', '❌ Error 404: La página que buscas no existe o fue movida.');
+});
