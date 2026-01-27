@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conciertos - TIKET MANIA</title>
+
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
             margin: 0;
@@ -167,7 +169,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('conciertos.reservar') }}" method="POST">
+            <form action="{{ secure_url(route('conciertos.reservar')) }}" method="POST">
                 @csrf
                 
                 <div class="input-group">

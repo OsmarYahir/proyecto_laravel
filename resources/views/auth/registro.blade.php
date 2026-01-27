@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Registro - TIKET MANIA</title>
+
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
             margin: 0;
@@ -105,7 +107,7 @@
     </div>
 
     <div class="login-container">
-        <form action="{{ route('registro.store') }}" method="POST" class="login-card">
+        <form action="{{ secure_url(route('registro.store')) }}" method="POST" class="login-card">
             @csrf
             <h2>Crea tu cuenta</h2>
 
