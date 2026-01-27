@@ -31,5 +31,6 @@ Route::get('/error', function () {
 Route::fallback(function () {
     return redirect()
         ->route('error')
-        ->with('error', '❌ Error 404: La página que buscas no existe o fue movida.');
+        ->with('error', 'Error 404: La página que buscas no existe o fue movida.');
 });
+

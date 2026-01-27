@@ -24,6 +24,9 @@
         <a href="/login">Login</a>
     </div>
 
+ <x-breadcrumbs />
+
+
     @php
         $errorMessage = session('error') ?? 'Error inesperado.';
         $isRecaptcha = str_contains($errorMessage, 'reCAPTCHA') || str_contains($errorMessage, 'seguridad');
@@ -31,7 +34,7 @@
     @endphp
 
     <div class="container">
-        <h1>⚠️ {{ $is404 ? 'No encontrado' : 'Hubo un problema' }}</h1>
+        <h1> {{ $is404 ? 'No encontrado' : 'Hubo un problema' }}</h1>
         
         <p>Lo sentimos, ha ocurrido un error en tu solicitud:</p>
 
@@ -43,9 +46,8 @@
             <div class="tips">
                 <strong>Sugerencias:</strong>
                 <ul>
-                    <li>Marca la casilla "No soy un robot".</li>
-                    <li>Si no ves el cuadro, recarga la página.</li>
-                    <li>Verifica que el sitio diga "https" en la barra de direcciones.</li>
+                    <li>Marca la casilla .</li>
+                
                 </ul>
             </div>
         @endif

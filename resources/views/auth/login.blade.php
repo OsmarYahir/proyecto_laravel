@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - TIKET MANIA</title>
 
+   
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
@@ -114,6 +115,9 @@
         <a href="/registro">Cuenta</a>
         <a href="/login">Login</a>
     </div>
+
+     <x-breadcrumbs />
+
 
     <div class="login-container">
         <form action="{{ secure_url(route('login.store')) }}" method="POST" class="login-card">

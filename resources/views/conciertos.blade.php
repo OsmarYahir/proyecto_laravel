@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conciertos - TIKET MANIA</title>
-
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Tiket Mania - Reserva de Conciertos</title>
     <style>
+        :root {
+            --primary: #6366f1; /* Indigo moderno */
+            --primary-hover: #4f46e5;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #f43f5e; /* Rosa/Rojo para detalles */
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,203 +22,273 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
+        /* Navbar Moderna */
         .navbar {
-            background: #333;
-            padding: 15px;
-            color: white;
-            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .navbar a {
-            color: white;
+        .navbar .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
             text-decoration: none;
-            margin-right: 20px;
+            letter-spacing: -1px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
         .container {
             max-width: 900px;
-            margin: 0 auto;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        .concierto {
-            background: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-            margin-bottom: 15px;
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
 
-        .concierto h3 {
-            margin-bottom: 10px;
+        /* Grid de Conciertos */
+        .conciertos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
-        .concierto p {
-            margin: 5px 0;
-            color: #666;
+        .concierto-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .formulario {
-            background: white;
-            padding: 30px;
-            border: 1px solid #ddd;
-            margin-top: 30px;
+        .concierto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .concierto-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .concierto-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Formulario Estilizado */
+        .formulario-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .formulario-card h2 {
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 1.5rem 0 1rem 0;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background-color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 12px;
-            background: #333;
+            background-color: var(--primary);
             color: white;
+            padding: 1rem;
             border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 20px;
+            transition: background 0.3s;
+            margin-top: 1rem;
         }
 
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-            white-space: pre-line;
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
         }
 
-        .recaptcha-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
+        .help-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
 
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ffeaa7;
+        /* Responsive */
+        @media (max-width: 600px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
-    
-    <!-- Google reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <!-- Navbar ultra básica -->
-    <div class="navbar">
-        <a href="/">TIKET MANIA</a>
-        <a href="/conciertos">Conciertos</a>
-        <a href="/registro">Cuenta</a>
-        <a href="/login">Login</a>
-    </div>
+
+    <nav class="navbar">
+        <a href="#" class="brand">TIKET MANIA</a>
+        <div class="nav-links">
+            <a href="#">Conciertos</a>
+            <a href="#">Cuenta</a>
+            <a href="#">Login</a>
+        </div>
+    </nav>
+
+     <x-breadcrumbs />
 
     <div class="container">
         <h1>Próximos Conciertos</h1>
-        <br>
-
-        <!-- Lista de Conciertos -->
-        <div class="concierto">
-            <h3>Rock Festival 2026</h3>
-            <p>15 de Marzo, 2026 - 20:00 hrs</p>
-            <p>Foro Sol, Ciudad de México</p>
-            <p>Desde $850 MXN</p>
-        </div>
-
-        <div class="concierto">
-            <h3>Festival Electrónico</h3>
-            <p>22 de Abril, 2026 - 18:00 hrs</p>
-            <p>Arena Guadalajara, Jalisco</p>
-            <p>Desde $650 MXN</p>
-        </div>
-
-        <div class="concierto">
-            <h3>Concierto Sinfónico</h3>
-            <p>5 de Mayo, 2026 - 19:00 hrs</p>
-            <p>Auditorio Nacional, CDMX</p>
-            <p>Desde $450 MXN</p>
-        </div>
-
-        <div class="concierto">
-            <h3>Pop Latino Tour</h3>
-            <p>18 de Junio, 2026 - 21:00 hrs</p>
-            <p>Estadio Monterrey, Nuevo León</p>
-            <p>Desde $950 MXN</p>
-        </div>
-
-        <!-- Formulario de Reserva -->
-        <div class="formulario">
-            <h2>Reserva tu boleto</h2>
-            
-            <div class="warning">
-                 <strong></strong> Este formulario NO guarda en base de datos
+        
+        <div class="conciertos-grid">
+            <div class="concierto-card">
+                <h3>Rock Festival</h3>
+                <p>15 Mar, 2026</p>
+                <p>CDMX</p>
+                <p>$850 MXN</p>
             </div>
+            <div class="concierto-card">
+                <h3>Electro Night</h3>
+                <p>22 Abr, 2026</p>
+                <p>Guadalajara</p>
+                <p>$650 MXN</p>
+            </div>
+            <div class="concierto-card">
+                <h3>Pop Tour</h3>
+                <p>18 Jun, 2026</p>
+                <p>Monterrey</p>
+                <p>$950 MXN</p>
+            </div>
+        </div>
 
-            @if (session('success'))
-                <div class="success-message">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <form action="{{ secure_url(route('conciertos.reservar')) }}" method="POST">
-                @csrf
+        <div class="formulario-card">
+            <h2>Reserva tu lugar</h2>
+            
+            <form action="#">
+                <p class="section-title">Datos del Asistente</p>
                 
                 <div class="input-group">
-                    <label>Nombre completo</label>
-                    <input type="text" name="nombre" value="{{ old('nombre') }}" required minlength="3">
+                    <label>Nombre Completo</label>
+                    <input type="text" placeholder="Tu nombre aquí..." required>
                 </div>
 
-                <div class="input-group">
-                    <label>Correo electrónico</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required>
+                <div class="two-columns">
+                    <div class="input-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" placeholder="email@ejemplo.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="tel" placeholder="10 dígitos">
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Teléfono</label>
-                    <input type="tel" name="telefono" value="{{ old('telefono') }}" required minlength="10" maxlength="15">
-                </div>
+                <p class="section-title">Detalles del Ticket</p>
 
                 <div class="input-group">
-                    <label>Selecciona concierto</label>
-                    <select name="concierto" required>
-                        <option value="">-- Elige un concierto --</option>
-                        <option value="Rock Festival 2026">Rock Festival 2026</option>
-                        <option value="Festival Electrónico">Festival Electrónico</option>
-                        <option value="Concierto Sinfónico">Concierto Sinfónico</option>
-                        <option value="Pop Latino Tour">Pop Latino Tour</option>
+                    <label>Selecciona tu Concierto</label>
+                    <select required>
+                        <option value="">-- Elige un evento --</option>
+                        <option>Rock Festival 2026</option>
+                        <option>Electro Night</option>
+                        <option>Pop Tour</option>
                     </select>
                 </div>
 
-                <div class="input-group">
-                    <label>Cantidad de boletos</label>
-                    <input type="number" name="cantidad" value="{{ old('cantidad', 1) }}" required min="1" max="10">
+                <div class="two-columns">
+                    <div class="input-group">
+                        <label>Cantidad</label>
+                        <input type="number" value="1" min="1" max="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Zona</label>
+                        <select>
+                            <option>General</option>
+                            <option>Preferente</option>
+                            <option>VIP</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- reCAPTCHA centrado -->
-                <div class="recaptcha-container">
-                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                </div>
-
-                <button type="submit" class="btn-submit">🎟️ Reservar Boletos</button>
+                <button type="submit" class="btn-submit">Confirmar Reserva </button>
             </form>
         </div>
     </div>
+
 </body>
 </html>

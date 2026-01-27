@@ -104,6 +104,9 @@
         @endauth
     </div>
 
+     <x-breadcrumbs />
+
+
     <div class="container">
         @if(session('success'))
             <div class="success-message">
