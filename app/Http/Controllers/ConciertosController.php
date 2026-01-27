@@ -68,8 +68,7 @@ class ConciertosController extends Controller
                       "• Nombre: {$validated['nombre']}\n" .
                       "• Email: {$validated['email']}\n" .
                       "• Concierto: {$validated['concierto']}\n" .
-                      "• Boletos: {$validated['cantidad']}\n\n" .
-                      ;
+                      "• Boletos: {$validated['cantidad']}\n\n" ;
 
             return redirect()
                 ->route('conciertos')
