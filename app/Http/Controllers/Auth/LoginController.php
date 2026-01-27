@@ -16,23 +16,22 @@ class LoginController extends Controller
 
     public function store(Request $request) {
         try {
-            // Validar reCAPTCHA de Google
+            // Validar reCAPTCHA de Google - SI FALLA, VA A /ERROR
             $recaptchaResponse = $request->input('g-recaptcha-response');
             
-            // Si no hay respuesta de reCAPTCHA o la validación falla
             if (!RecaptchaHelper::verify($recaptchaResponse)) {
                 Log::warning('reCAPTCHA falló en login', [
                     'ip' => $request->ip(),
                     'email' => $request->input('email')
                 ]);
                 
-                // Redirigir a la vista de error
+                // REDIRIGIR A /ERROR
                 return redirect()
                     ->route('error')
                     ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
 
-            // Validar credenciales
+            // Validar credenciales - SI FALLAN, SE MUESTRAN EN EL FORMULARIO
             $credentials = $request->validate([
                 'email' => 'required|email',
                 'password' => 'required',
@@ -53,28 +52,26 @@ class LoginController extends Controller
                 return redirect()->intended('/')->with('success', '¡Bienvenido de nuevo!');
             }
 
-            // Si las credenciales no coinciden
+            // Si las credenciales no coinciden, MOSTRAR ERROR EN EL FORMULARIO
             Log::warning('Intento de login fallido', [
                 'email' => $credentials['email'],
                 'ip' => $request->ip()
             ]);
 
-            return redirect()
-                ->route('error')
-                ->with('error', '❌ Las credenciales no coinciden con nuestros registros.');
+            return back()
+                ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
+                ->withInput();
                 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $errors = collect($e->errors())->flatten()->implode('. ');
-            
-            return redirect()
-                ->route('error')
-                ->with('error', '❌ ' . $errors);
+            // Los errores de validación SE MUESTRAN EN EL FORMULARIO
+            return back()->withErrors($e->validator)->withInput();
             
         } catch (\Exception $e) {
             Log::error('Error en login', [
                 'message' => $e->getMessage()
             ]);
             
+            // Errores generales VAN A /ERROR
             return redirect()
                 ->route('error')
                 ->with('error', '❌ Error al iniciar sesión. Por favor intenta de nuevo.');

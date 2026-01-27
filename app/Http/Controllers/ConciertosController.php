@@ -16,7 +16,7 @@ class ConciertosController extends Controller
     public function reservar(Request $request)
     {
         try {
-            // Validar reCAPTCHA de Google
+            // Validar reCAPTCHA de Google - SI FALLA, VA A /ERROR
             $recaptchaResponse = $request->input('g-recaptcha-response');
             
             if (!RecaptchaHelper::verify($recaptchaResponse)) {
@@ -25,12 +25,13 @@ class ConciertosController extends Controller
                     'email' => $request->input('email')
                 ]);
                 
+                // REDIRIGIR A /ERROR (como querías)
                 return redirect()
                     ->route('error')
                     ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
 
-            // VALIDACIONES COMPLETAS
+            // VALIDACIONES COMPLETAS - SI FALLAN, SE MUESTRAN EN EL FORMULARIO
             $validated = $request->validate([
                 // Información personal
                 'nombre' => [
@@ -185,26 +186,26 @@ class ConciertosController extends Controller
             ]);
 
             // Mensaje de éxito detallado
-            $mensaje = "Reserva realizada\n\n" .
-                      "DETALLES DE TU RESERVA:\n" .
+            $mensaje = "🎉 ¡Reserva realizada con éxito!\n\n" .
+                      "📋 DETALLES DE TU RESERVA:\n" .
                       "━━━━━━━━━━━━━━━━━━━━━━━━━━\n" .
-                      "Nombre: {$validated['nombre']}\n" .
-                      "Email: {$validated['email']}\n" .
-                      "Teléfono: {$validated['telefono']}\n" .
-                      "Concierto: {$validated['concierto']}\n" .
-                      "Boletos: {$validated['cantidad']} x {$validated['tipo_boleto']}\n" .
-                      "Total: $" . number_format($precioTotal, 2) . " MXN\n" .
-                      "Método de pago: {$validated['metodo_pago']}\n" .
-                      "Dirección: {$validated['direccion']}\n\n" .
-                      "IMPORTANTE: Esto es un prototipo.\n" ;
+                      "👤 Nombre: {$validated['nombre']}\n" .
+                      "📧 Email: {$validated['email']}\n" .
+                      "📱 Teléfono: {$validated['telefono']}\n" .
+                      "🎫 Concierto: {$validated['concierto']}\n" .
+                      "🎟️ Boletos: {$validated['cantidad']} x {$validated['tipo_boleto']}\n" .
+                      "💰 Total: $" . number_format($precioTotal, 2) . " MXN\n" .
+                      "💳 Método de pago: {$validated['metodo_pago']}\n" .
+                      "📍 Dirección: {$validated['direccion']}\n\n" .
+                      "⚠️ IMPORTANTE: Esto es un prototipo.\n" .
+                      "La reserva NO se guardó en la base de datos.";
 
             return redirect()
                 ->route('conciertos')
                 ->with('success', $mensaje);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Los errores de validación se manejan automáticamente
-            // Laravel los regresa al formulario con old() values
+            // Los errores de validación SE MUESTRAN EN EL FORMULARIO
             return back()->withErrors($e->validator)->withInput();
             
         } catch (\Exception $e) {
@@ -213,9 +214,10 @@ class ConciertosController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             
+            // Errores generales VAN A /ERROR
             return redirect()
                 ->route('error')
-                ->with('error', 'Error al procesar la reserva. Por favor intenta de nuevo.');
+                ->with('error', '❌ Error al procesar la reserva. Por favor intenta de nuevo.');
         }
     }
 }

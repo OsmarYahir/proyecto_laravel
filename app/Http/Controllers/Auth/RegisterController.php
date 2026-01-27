@@ -17,23 +17,22 @@ class RegisterController extends Controller
 
     public function store(Request $request) {
         try {
-            // Validar reCAPTCHA de Google
+            // Validar reCAPTCHA de Google - SI FALLA, VA A /ERROR
             $recaptchaResponse = $request->input('g-recaptcha-response');
             
-            // Si no hay respuesta de reCAPTCHA o la validación falla
             if (!RecaptchaHelper::verify($recaptchaResponse)) {
                 Log::warning('reCAPTCHA falló en registro', [
                     'ip' => $request->ip(),
                     'email' => $request->input('email')
                 ]);
                 
-                // Redirigir a la vista de error
+                // REDIRIGIR A /ERROR
                 return redirect()
                     ->route('error')
                     ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
 
-            // Validar datos del formulario
+            // Validar datos del formulario - SI FALLAN, SE MUESTRAN EN EL FORMULARIO
             $validated = $request->validate([
                 'name' => 'required|string|max:255|min:3',
                 'email' => 'required|string|email|max:255|unique:users',
@@ -67,11 +66,8 @@ class RegisterController extends Controller
                 ->with('success', '¡Cuenta creada con éxito! Ya puedes iniciar sesión.');
                 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $errors = collect($e->errors())->flatten()->implode('. ');
-            
-            return redirect()
-                ->route('error')
-                ->with('error', '❌ Errores de validación: ' . $errors);
+            // Los errores de validación SE MUESTRAN EN EL FORMULARIO
+            return back()->withErrors($e->validator)->withInput();
             
         } catch (\Exception $e) {
             Log::error('Error creando usuario', [
@@ -79,6 +75,7 @@ class RegisterController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             
+            // Errores generales VAN A /ERROR
             return redirect()
                 ->route('error')
                 ->with('error', '❌ Error al crear la cuenta. Por favor intenta de nuevo.');
