@@ -3,18 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiket Mania - Reserva de Conciertos</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Conciertos - TIKET MANIA</title>
     <style>
-        :root {
-            --primary: #6366f1; /* Indigo moderno */
-            --primary-hover: #4f46e5;
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --accent: #f43f5e; /* Rosa/Rojo para detalles */
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -22,273 +13,521 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
         }
 
-        /* Navbar Moderna */
         .navbar {
-            background: #ffffff;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: #333;
+            padding: 15px;
+            color: white;
+            margin-bottom: 20px;
         }
 
-        .navbar .brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
+        .navbar a {
+            color: white;
             text-decoration: none;
-            letter-spacing: -1px;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
+            margin-right: 20px;
         }
 
         .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
+        .concierto {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
         }
 
-        /* Grid de Conciertos */
-        .conciertos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+        .concierto h3 {
+            margin-bottom: 10px;
         }
 
-        .concierto-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            transition: transform 0.2s, box-shadow 0.2s;
+        .concierto p {
+            margin: 5px 0;
+            color: #666;
         }
 
-        .concierto-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-        }
-
-        .concierto-card h3 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .concierto-card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Formulario Estilizado */
-        .formulario-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-
-        .formulario-card h2 {
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 1.5rem 0 1rem 0;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .formulario {
+            background: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            margin-top: 30px;
         }
 
         .input-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        label .required {
+            color: #dc3545;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            background-color: #fff;
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 12px;
+            border: 1px solid #ccc;
+            font-size: 14px;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: #333;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .input-error {
+            border-color: #dc3545;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn-submit:hover {
+            background: #555;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+
+        .error-summary {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-summary ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .recaptcha-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
         }
 
         .two-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 20px;
         }
 
-        .btn-submit {
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 1rem;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .help-text {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .two-columns {
                 grid-template-columns: 1fr;
             }
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
         }
     </style>
+    
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
+    <!-- Navbar ultra básica -->
+    <div class="navbar">
+        <a href="/">TIKET MANIA</a>
+        <a href="/conciertos">Conciertos</a>
+        <a href="/usuarios">Usuarios</a>
+        <a href="/registro">Cuenta</a>
+        <a href="/login">Login</a>
+    </div>
 
-    <nav class="navbar">
-        <a href="#" class="brand">TIKET MANIA</a>
-        <div class="nav-links">
-            <a href="#">Conciertos</a>
-            <a href="#">Cuenta</a>
-            <a href="#">Login</a>
-        </div>
-    </nav>
-
-     <x-breadcrumbs />
+    <!-- Breadcrumbs -->
+    <x-breadcrumbs />
 
     <div class="container">
         <h1>Próximos Conciertos</h1>
-        
-        <div class="conciertos-grid">
-            <div class="concierto-card">
-                <h3>Rock Festival</h3>
-                <p>15 Mar, 2026</p>
-                <p>CDMX</p>
-                <p>$850 MXN</p>
-            </div>
-            <div class="concierto-card">
-                <h3>Electro Night</h3>
-                <p>22 Abr, 2026</p>
-                <p>Guadalajara</p>
-                <p>$650 MXN</p>
-            </div>
-            <div class="concierto-card">
-                <h3>Pop Tour</h3>
-                <p>18 Jun, 2026</p>
-                <p>Monterrey</p>
-                <p>$950 MXN</p>
-            </div>
+        <br>
+
+        <!-- Lista de Conciertos -->
+        <div class="concierto">
+            <h3>🎸 Rock Festival 2026</h3>
+            <p>📅 15 de Marzo, 2026 - 20:00 hrs</p>
+            <p>📍 Foro Sol, Ciudad de México</p>
+            <p>💰 Desde $850 MXN</p>
         </div>
 
-        <div class="formulario-card">
-            <h2>Reserva tu lugar</h2>
+        <div class="concierto">
+            <h3>🎧 Festival Electrónico</h3>
+            <p>📅 22 de Abril, 2026 - 18:00 hrs</p>
+            <p>📍 Arena Guadalajara, Jalisco</p>
+            <p>💰 Desde $650 MXN</p>
+        </div>
+
+        <div class="concierto">
+            <h3>🎼 Concierto Sinfónico</h3>
+            <p>📅 5 de Mayo, 2026 - 19:00 hrs</p>
+            <p>📍 Auditorio Nacional, CDMX</p>
+            <p>💰 Desde $450 MXN</p>
+        </div>
+
+        <div class="concierto">
+            <h3>🎤 Pop Latino Tour</h3>
+            <p>📅 18 de Junio, 2026 - 21:00 hrs</p>
+            <p>📍 Estadio Monterrey, Nuevo León</p>
+            <p>💰 Desde $950 MXN</p>
+        </div>
+
+        <!-- Formulario de Reserva EXTENSO -->
+        <div class="formulario">
+            <h2>Reserva tu boleto</h2>
             
-            <form action="#">
-                <p class="section-title">Datos del Asistente</p>
+            <div class="warning">
+                ⚠️ <strong>Prototipo:</strong> Este formulario NO guarda en base de datos
+            </div>
+
+            @if (session('success'))
+                <div class="success-message">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="error-summary">
+                    <strong>⚠️ Por favor corrige los siguientes errores:</strong>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ secure_url(route('conciertos.reservar')) }}" method="POST">
+                @csrf
                 
+                <h3 style="margin-bottom: 20px; color: #333;">Información Personal</h3>
+
+                <!-- Nombre completo -->
                 <div class="input-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" placeholder="Tu nombre aquí..." required>
+                    <label>
+                        Nombre completo <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="nombre" 
+                        value="{{ old('nombre') }}" 
+                        required 
+                        minlength="3"
+                        maxlength="100"
+                        placeholder="Ejemplo: Juan Pérez García"
+                        class="{{ $errors->has('nombre') ? 'input-error' : '' }}"
+                    >
+                    @error('nombre')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                    <span class="help-text">Mínimo 3 caracteres, máximo 100</span>
                 </div>
 
+                <!-- Email y Teléfono en dos columnas -->
                 <div class="two-columns">
                     <div class="input-group">
-                        <label>Correo Electrónico</label>
-                        <input type="email" placeholder="email@ejemplo.com" required>
+                        <label>
+                            Correo electrónico <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            value="{{ old('email') }}" 
+                            required
+                            placeholder="ejemplo@correo.com"
+                            class="{{ $errors->has('email') ? 'input-error' : '' }}"
+                        >
+                        @error('email')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
+                        <span class="help-text">Recibirás tu confirmación aquí</span>
                     </div>
+
                     <div class="input-group">
-                        <label>Teléfono</label>
-                        <input type="tel" placeholder="10 dígitos">
+                        <label>
+                            Teléfono <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            name="telefono" 
+                            value="{{ old('telefono') }}" 
+                            required 
+                            minlength="10" 
+                            maxlength="15"
+                            placeholder="5512345678"
+                            pattern="[0-9]+"
+                            class="{{ $errors->has('telefono') ? 'input-error' : '' }}"
+                        >
+                        @error('telefono')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
+                        <span class="help-text">Solo números, 10-15 dígitos</span>
                     </div>
                 </div>
 
-                <p class="section-title">Detalles del Ticket</p>
+                <!-- Edad y Documento -->
+                <div class="two-columns">
+                    <div class="input-group">
+                        <label>
+                            Edad <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            name="edad" 
+                            value="{{ old('edad') }}" 
+                            required 
+                            min="18" 
+                            max="100"
+                            placeholder="18"
+                            class="{{ $errors->has('edad') ? 'input-error' : '' }}"
+                        >
+                        @error('edad')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
+                        <span class="help-text">Debes ser mayor de 18 años</span>
+                    </div>
 
+                    <div class="input-group">
+                        <label>
+                            Documento de identidad <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="documento" 
+                            value="{{ old('documento') }}" 
+                            required
+                            minlength="5"
+                            maxlength="20"
+                            placeholder="INE, Pasaporte, etc."
+                            class="{{ $errors->has('documento') ? 'input-error' : '' }}"
+                        >
+                        @error('documento')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
+                        <span class="help-text">Para identificación en el evento</span>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0; color: #333;">Detalles de la Reserva</h3>
+
+                <!-- Concierto -->
                 <div class="input-group">
-                    <label>Selecciona tu Concierto</label>
-                    <select required>
-                        <option value="">-- Elige un evento --</option>
-                        <option>Rock Festival 2026</option>
-                        <option>Electro Night</option>
-                        <option>Pop Tour</option>
+                    <label>
+                        Selecciona concierto <span class="required">*</span>
+                    </label>
+                    <select 
+                        name="concierto" 
+                        required
+                        class="{{ $errors->has('concierto') ? 'input-error' : '' }}"
+                    >
+                        <option value="">-- Elige un concierto --</option>
+                        <option value="Rock Festival 2026" {{ old('concierto') == 'Rock Festival 2026' ? 'selected' : '' }}>
+                            🎸 Rock Festival 2026 - $850 MXN
+                        </option>
+                        <option value="Festival Electrónico" {{ old('concierto') == 'Festival Electrónico' ? 'selected' : '' }}>
+                            🎧 Festival Electrónico - $650 MXN
+                        </option>
+                        <option value="Concierto Sinfónico" {{ old('concierto') == 'Concierto Sinfónico' ? 'selected' : '' }}>
+                            🎼 Concierto Sinfónico - $450 MXN
+                        </option>
+                        <option value="Pop Latino Tour" {{ old('concierto') == 'Pop Latino Tour' ? 'selected' : '' }}>
+                            🎤 Pop Latino Tour - $950 MXN
+                        </option>
                     </select>
+                    @error('concierto')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
                 </div>
 
+                <!-- Cantidad y Tipo de boleto -->
                 <div class="two-columns">
                     <div class="input-group">
-                        <label>Cantidad</label>
-                        <input type="number" value="1" min="1" max="10">
+                        <label>
+                            Cantidad de boletos <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            name="cantidad" 
+                            value="{{ old('cantidad', 1) }}" 
+                            required 
+                            min="1" 
+                            max="10"
+                            placeholder="1"
+                            class="{{ $errors->has('cantidad') ? 'input-error' : '' }}"
+                        >
+                        @error('cantidad')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
+                        <span class="help-text">Máximo 10 boletos por reserva</span>
                     </div>
+
                     <div class="input-group">
-                        <label>Zona</label>
-                        <select>
-                            <option>General</option>
-                            <option>Preferente</option>
-                            <option>VIP</option>
+                        <label>
+                            Tipo de boleto <span class="required">*</span>
+                        </label>
+                        <select 
+                            name="tipo_boleto" 
+                            required
+                            class="{{ $errors->has('tipo_boleto') ? 'input-error' : '' }}"
+                        >
+                            <option value="">-- Selecciona tipo --</option>
+                            <option value="VIP" {{ old('tipo_boleto') == 'VIP' ? 'selected' : '' }}>VIP (+50%)</option>
+                            <option value="Preferente" {{ old('tipo_boleto') == 'Preferente' ? 'selected' : '' }}>Preferente (+20%)</option>
+                            <option value="General" {{ old('tipo_boleto') == 'General' ? 'selected' : '' }}>General (precio base)</option>
                         </select>
+                        @error('tipo_boleto')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Confirmar Reserva </button>
+                <!-- Método de pago -->
+                <div class="input-group">
+                    <label>
+                        Método de pago <span class="required">*</span>
+                    </label>
+                    <select 
+                        name="metodo_pago" 
+                        required
+                        class="{{ $errors->has('metodo_pago') ? 'input-error' : '' }}"
+                    >
+                        <option value="">-- Selecciona método --</option>
+                        <option value="Tarjeta de crédito" {{ old('metodo_pago') == 'Tarjeta de crédito' ? 'selected' : '' }}>
+                            💳 Tarjeta de crédito
+                        </option>
+                        <option value="Tarjeta de débito" {{ old('metodo_pago') == 'Tarjeta de débito' ? 'selected' : '' }}>
+                            💳 Tarjeta de débito
+                        </option>
+                        <option value="Transferencia" {{ old('metodo_pago') == 'Transferencia' ? 'selected' : '' }}>
+                            🏦 Transferencia bancaria
+                        </option>
+                        <option value="Efectivo" {{ old('metodo_pago') == 'Efectivo' ? 'selected' : '' }}>
+                            💵 Efectivo
+                        </option>
+                    </select>
+                    @error('metodo_pago')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Dirección -->
+                <div class="input-group">
+                    <label>
+                        Dirección completa <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="direccion" 
+                        value="{{ old('direccion') }}" 
+                        required
+                        minlength="10"
+                        maxlength="200"
+                        placeholder="Calle, número, colonia, ciudad"
+                        class="{{ $errors->has('direccion') ? 'input-error' : '' }}"
+                    >
+                    @error('direccion')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                    <span class="help-text">Para envío de boletos físicos (opcional)</span>
+                </div>
+
+                <!-- Comentarios adicionales -->
+                <div class="input-group">
+                    <label>
+                        Comentarios adicionales (opcional)
+                    </label>
+                    <textarea 
+                        name="comentarios" 
+                        rows="4"
+                        maxlength="500"
+                        placeholder="Algún requerimiento especial, alergias, necesidades de accesibilidad, etc."
+                        class="{{ $errors->has('comentarios') ? 'input-error' : '' }}"
+                    >{{ old('comentarios') }}</textarea>
+                    @error('comentarios')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                    <span class="help-text">Máximo 500 caracteres</span>
+                </div>
+
+                <!-- Aceptar términos -->
+                <div class="input-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input 
+                            type="checkbox" 
+                            name="acepta_terminos" 
+                            value="1"
+                            required
+                            style="width: auto; margin-right: 10px;"
+                            {{ old('acepta_terminos') ? 'checked' : '' }}
+                        >
+                        <span>
+                            Acepto los términos y condiciones <span class="required">*</span>
+                        </span>
+                    </label>
+                    @error('acepta_terminos')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- reCAPTCHA centrado -->
+                <div class="recaptcha-container">
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                </div>
+                @error('recaptcha')
+                    <div style="text-align: center;">
+                        <span class="error">{{ $message }}</span>
+                    </div>
+                @enderror
+
+                <button type="submit" class="btn-submit">🎟️ Reservar Boletos</button>
             </form>
         </div>
     </div>
-
 </body>
 </html>
