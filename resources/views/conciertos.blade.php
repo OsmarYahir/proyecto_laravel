@@ -32,7 +32,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -68,20 +68,22 @@
             margin-bottom: 8px;
             font-weight: bold;
             color: #333;
+            font-size: 14px;
         }
 
         label .required {
             color: #dc3545;
         }
 
-        input, select, textarea {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
             font-size: 14px;
+            transition: border-color 0.3s;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #333;
         }
@@ -90,22 +92,31 @@
             font-size: 12px;
             color: #666;
             margin-top: 5px;
+            display: block;
         }
 
+        /* Estilos para errores */
         .error {
             color: #dc3545;
             font-size: 13px;
             margin-top: 5px;
             display: block;
+            font-weight: 500;
         }
 
         .input-error {
-            border-color: #dc3545;
+            border-color: #dc3545 !important;
+            background-color: #fff5f5;
+        }
+
+        /* Estilos para inputs válidos (cuando tienen valor y no hay error) */
+        .input-valid {
+            border-color: #28a745;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             background: #333;
             color: white;
             border: none;
@@ -125,6 +136,7 @@
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid #c3e6cb;
+            border-radius: 4px;
             white-space: pre-line;
             line-height: 1.6;
         }
@@ -135,6 +147,13 @@
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+
+        .error-summary strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
         }
 
         .error-summary ul {
@@ -142,30 +161,31 @@
             margin-top: 10px;
         }
 
+        .error-summary li {
+            margin-bottom: 5px;
+        }
+
         .recaptcha-container {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         .warning {
             background: #fff3cd;
             color: #856404;
-            padding: 15px;
+            padding: 12px;
             margin-bottom: 20px;
             border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
+        /* Indicador visual de campo obligatorio */
+        .field-icon {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 12px;
         }
     </style>
     
@@ -218,9 +238,9 @@
             <p>💰 Desde $950 MXN</p>
         </div>
 
-        <!-- Formulario de Reserva EXTENSO -->
+        <!-- Formulario de Reserva -->
         <div class="formulario">
-            <h2>Reserva tu boleto</h2>
+            <h2>📝 Reserva tu boleto</h2>
             
             <div class="warning">
                 ⚠️ <strong>Prototipo:</strong> Este formulario NO guarda en base de datos
@@ -245,8 +265,6 @@
 
             <form action="{{ secure_url(route('conciertos.reservar')) }}" method="POST">
                 @csrf
-                
-                <h3 style="margin-bottom: 20px; color: #333;">Información Personal</h3>
 
                 <!-- Nombre completo -->
                 <div class="input-group">
@@ -258,103 +276,56 @@
                         name="nombre" 
                         value="{{ old('nombre') }}" 
                         required 
-                        minlength="3"
-                        maxlength="100"
-                        placeholder="Ejemplo: Juan Pérez García"
-                        class="{{ $errors->has('nombre') ? 'input-error' : '' }}"
+                        placeholder="Juan Pérez García"
+                        class="{{ $errors->has('nombre') ? 'input-error' : (old('nombre') ? 'input-valid' : '') }}"
                     >
                     @error('nombre')
-                        <span class="error">{{ $message }}</span>
+                        <span class="error">❌ {{ $message }}</span>
+                    @else
+                        <span class="help-text">✓ Solo letras y espacios (sin números ni símbolos)</span>
                     @enderror
-                    <span class="help-text">Mínimo 3 caracteres, máximo 100</span>
                 </div>
 
-                <!-- Email y Teléfono en dos columnas -->
-                <div class="two-columns">
-                    <div class="input-group">
-                        <label>
-                            Correo electrónico <span class="required">*</span>
-                        </label>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            value="{{ old('email') }}" 
-                            required
-                            placeholder="ejemplo@correo.com"
-                            class="{{ $errors->has('email') ? 'input-error' : '' }}"
-                        >
-                        @error('email')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
-                        <span class="help-text">Recibirás tu confirmación aquí</span>
-                    </div>
-
-                    <div class="input-group">
-                        <label>
-                            Teléfono <span class="required">*</span>
-                        </label>
-                        <input 
-                            type="tel" 
-                            name="telefono" 
-                            value="{{ old('telefono') }}" 
-                            required 
-                            minlength="10" 
-                            maxlength="15"
-                            placeholder="5512345678"
-                            pattern="[0-9]+"
-                            class="{{ $errors->has('telefono') ? 'input-error' : '' }}"
-                        >
-                        @error('telefono')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
-                        <span class="help-text">Solo números, 10-15 dígitos</span>
-                    </div>
+                <!-- Email -->
+                <div class="input-group">
+                    <label>
+                        Correo electrónico <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        value="{{ old('email') }}" 
+                        required
+                        placeholder="ejemplo@correo.com"
+                        class="{{ $errors->has('email') ? 'input-error' : (old('email') ? 'input-valid' : '') }}"
+                    >
+                    @error('email')
+                        <span class="error">❌ {{ $message }}</span>
+                    @else
+                        <span class="help-text">✓ Formato: usuario@dominio.com</span>
+                    @enderror
                 </div>
 
-                <!-- Edad y Documento -->
-                <div class="two-columns">
-                    <div class="input-group">
-                        <label>
-                            Edad <span class="required">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            name="edad" 
-                            value="{{ old('edad') }}" 
-                            required 
-                            min="18" 
-                            max="100"
-                            placeholder="18"
-                            class="{{ $errors->has('edad') ? 'input-error' : '' }}"
-                        >
-                        @error('edad')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
-                        <span class="help-text">Debes ser mayor de 18 años</span>
-                    </div>
-
-                    <div class="input-group">
-                        <label>
-                            Documento de identidad <span class="required">*</span>
-                        </label>
-                        <input 
-                            type="text" 
-                            name="documento" 
-                            value="{{ old('documento') }}" 
-                            required
-                            minlength="5"
-                            maxlength="20"
-                            placeholder="INE, Pasaporte, etc."
-                            class="{{ $errors->has('documento') ? 'input-error' : '' }}"
-                        >
-                        @error('documento')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
-                        <span class="help-text">Para identificación en el evento</span>
-                    </div>
+                <!-- Teléfono -->
+                <div class="input-group">
+                    <label>
+                        Teléfono <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="tel" 
+                        name="telefono" 
+                        value="{{ old('telefono') }}" 
+                        required 
+                        placeholder="5512345678"
+                        maxlength="10"
+                        class="{{ $errors->has('telefono') ? 'input-error' : (old('telefono') ? 'input-valid' : '') }}"
+                    >
+                    @error('telefono')
+                        <span class="error">❌ {{ $message }}</span>
+                    @else
+                        <span class="help-text">✓ Exactamente 10 dígitos (solo números, sin guiones ni espacios)</span>
+                    @enderror
                 </div>
-
-                <h3 style="margin: 30px 0 20px 0; color: #333;">Detalles de la Reserva</h3>
 
                 <!-- Concierto -->
                 <div class="input-group">
@@ -364,7 +335,7 @@
                     <select 
                         name="concierto" 
                         required
-                        class="{{ $errors->has('concierto') ? 'input-error' : '' }}"
+                        class="{{ $errors->has('concierto') ? 'input-error' : (old('concierto') ? 'input-valid' : '') }}"
                     >
                         <option value="">-- Elige un concierto --</option>
                         <option value="Rock Festival 2026" {{ old('concierto') == 'Rock Festival 2026' ? 'selected' : '' }}>
@@ -381,149 +352,37 @@
                         </option>
                     </select>
                     @error('concierto')
-                        <span class="error">{{ $message }}</span>
+                        <span class="error">❌ {{ $message }}</span>
+                    @else
+                        <span class="help-text">✓ Elige el evento al que deseas asistir</span>
                     @enderror
                 </div>
 
-                <!-- Cantidad y Tipo de boleto -->
-                <div class="two-columns">
-                    <div class="input-group">
-                        <label>
-                            Cantidad de boletos <span class="required">*</span>
-                        </label>
-                        <input 
-                            type="number" 
-                            name="cantidad" 
-                            value="{{ old('cantidad', 1) }}" 
-                            required 
-                            min="1" 
-                            max="10"
-                            placeholder="1"
-                            class="{{ $errors->has('cantidad') ? 'input-error' : '' }}"
-                        >
-                        @error('cantidad')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
-                        <span class="help-text">Máximo 10 boletos por reserva</span>
-                    </div>
-
-                    <div class="input-group">
-                        <label>
-                            Tipo de boleto <span class="required">*</span>
-                        </label>
-                        <select 
-                            name="tipo_boleto" 
-                            required
-                            class="{{ $errors->has('tipo_boleto') ? 'input-error' : '' }}"
-                        >
-                            <option value="">-- Selecciona tipo --</option>
-                            <option value="VIP" {{ old('tipo_boleto') == 'VIP' ? 'selected' : '' }}>VIP (+50%)</option>
-                            <option value="Preferente" {{ old('tipo_boleto') == 'Preferente' ? 'selected' : '' }}>Preferente (+20%)</option>
-                            <option value="General" {{ old('tipo_boleto') == 'General' ? 'selected' : '' }}>General (precio base)</option>
-                        </select>
-                        @error('tipo_boleto')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Método de pago -->
+                <!-- Cantidad -->
                 <div class="input-group">
                     <label>
-                        Método de pago <span class="required">*</span>
-                    </label>
-                    <select 
-                        name="metodo_pago" 
-                        required
-                        class="{{ $errors->has('metodo_pago') ? 'input-error' : '' }}"
-                    >
-                        <option value="">-- Selecciona método --</option>
-                        <option value="Tarjeta de crédito" {{ old('metodo_pago') == 'Tarjeta de crédito' ? 'selected' : '' }}>
-                            💳 Tarjeta de crédito
-                        </option>
-                        <option value="Tarjeta de débito" {{ old('metodo_pago') == 'Tarjeta de débito' ? 'selected' : '' }}>
-                            💳 Tarjeta de débito
-                        </option>
-                        <option value="Transferencia" {{ old('metodo_pago') == 'Transferencia' ? 'selected' : '' }}>
-                            🏦 Transferencia bancaria
-                        </option>
-                        <option value="Efectivo" {{ old('metodo_pago') == 'Efectivo' ? 'selected' : '' }}>
-                            💵 Efectivo
-                        </option>
-                    </select>
-                    @error('metodo_pago')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Dirección -->
-                <div class="input-group">
-                    <label>
-                        Dirección completa <span class="required">*</span>
+                        Cantidad de boletos <span class="required">*</span>
                     </label>
                     <input 
-                        type="text" 
-                        name="direccion" 
-                        value="{{ old('direccion') }}" 
-                        required
-                        minlength="10"
-                        maxlength="200"
-                        placeholder="Calle, número, colonia, ciudad"
-                        class="{{ $errors->has('direccion') ? 'input-error' : '' }}"
+                        type="number" 
+                        name="cantidad" 
+                        value="{{ old('cantidad', 1) }}" 
+                        required 
+                        min="1" 
+                        max="10"
+                        class="{{ $errors->has('cantidad') ? 'input-error' : (old('cantidad') ? 'input-valid' : '') }}"
                     >
-                    @error('direccion')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                    <span class="help-text">Para envío de boletos físicos (opcional)</span>
-                </div>
-
-                <!-- Comentarios adicionales -->
-                <div class="input-group">
-                    <label>
-                        Comentarios adicionales (opcional)
-                    </label>
-                    <textarea 
-                        name="comentarios" 
-                        rows="4"
-                        maxlength="500"
-                        placeholder="Algún requerimiento especial, alergias, necesidades de accesibilidad, etc."
-                        class="{{ $errors->has('comentarios') ? 'input-error' : '' }}"
-                    >{{ old('comentarios') }}</textarea>
-                    @error('comentarios')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                    <span class="help-text">Máximo 500 caracteres</span>
-                </div>
-
-                <!-- Aceptar términos -->
-                <div class="input-group">
-                    <label style="display: flex; align-items: center; cursor: pointer;">
-                        <input 
-                            type="checkbox" 
-                            name="acepta_terminos" 
-                            value="1"
-                            required
-                            style="width: auto; margin-right: 10px;"
-                            {{ old('acepta_terminos') ? 'checked' : '' }}
-                        >
-                        <span>
-                            Acepto los términos y condiciones <span class="required">*</span>
-                        </span>
-                    </label>
-                    @error('acepta_terminos')
-                        <span class="error">{{ $message }}</span>
+                    @error('cantidad')
+                        <span class="error">❌ {{ $message }}</span>
+                    @else
+                        <span class="help-text">✓ Mínimo 1, máximo 10 boletos por reserva</span>
                     @enderror
                 </div>
 
-                <!-- reCAPTCHA centrado -->
+                <!-- reCAPTCHA -->
                 <div class="recaptcha-container">
                     <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                 </div>
-                @error('recaptcha')
-                    <div style="text-align: center;">
-                        <span class="error">{{ $message }}</span>
-                    </div>
-                @enderror
 
                 <button type="submit" class="btn-submit">🎟️ Reservar Boletos</button>
             </form>
