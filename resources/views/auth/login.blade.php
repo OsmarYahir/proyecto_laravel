@@ -5,24 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - TIKET MANIA</title>
-    @vite(['resources/css/login.css', 'resources/js/login.js'])
-    @vite(['resources/css/navbar.css', 'resources/js/navbar.js'])
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: #333;
+            padding: 15px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            background: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .link-text {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Centrar reCAPTCHA */
+        .recaptcha-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
+    
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-logo">
-            <a href="/"> TIKET <span> MANIA</span></a>
-        </div>
-        <div class="nav-search">
-            <input type="text" placeholder="Busca eventos..." id="search-input">
-            <button type="button"> 🔍</button>
-        </div>
-        <ul class="nav-links">
-            <li><a href="/eventos">Conciertos</a></li>
-            <li><a href="/registro">Cuenta</a></li>
-            <li><a href="/login">Login</a></li>
-        </ul>
-    </nav>
+    <!-- Navbar ultra básica -->
+    <div class="navbar">
+        <a href="/">TIKET MANIA</a>
+        <a href="/conciertos">Conciertos</a>
+        <a href="/registro">Cuenta</a>
+        <a href="/login">Login</a>
+    </div>
 
     <div class="login-container">
         <form action="{{ route('login.store') }}" method="POST" class="login-card">
@@ -30,90 +119,40 @@
             <h2>Iniciar Sesión</h2>
 
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert-success">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                <div class="error-message">
+                    @foreach ($errors->all() as $error)
+                        {{ $error }}<br>
+                    @endforeach
                 </div>
             @endif
 
             <div class="input-group">
-                <label>Correo Electrónico *</label>
-                <input type="email" name="email" value="{{ old('email') }}" required placeholder="ejemplo@correo.com">
-                @error('email')
-                    <span class="error-text">{{ $message }}</span>
-                @enderror
+                <label>Correo Electrónico</label>
+                <input type="email" name="email" value="{{ old('email') }}" required>
             </div>
 
             <div class="input-group">
-                <label>Contraseña *</label>
-                <input type="password" name="password" required placeholder="********">
-                @error('password')
-                    <span class="error-text">{{ $message }}</span>
-                @enderror
+                <label>Contraseña</label>
+                <input type="password" name="password" required>
             </div>
 
-            <div class="captcha-section">
-                <label>Verificación de seguridad *</label>
-                <div class="captcha-box">
-                    <span id="captcha-question" style="font-weight: bold; font-size: 1.2em;">Cargando...</span>
-                    <button type="button" id="refresh-captcha" title="Generar nueva pregunta">🔄</button>
-                </div>
-                <input type="hidden" name="captcha_token" id="captcha-token">
-                <input type="number" name="captcha_answer" id="captcha-answer" placeholder="Escribe el resultado" required>
-                @error('captcha_answer')
-                    <span class="error-text">{{ $message }}</span>
-                @enderror
+            <!-- reCAPTCHA centrado -->
+            <div class="recaptcha-container">
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
             </div>
 
             <button type="submit" class="btn-login">Ingresar</button>
 
-            <p class="link-text">¿No tienes cuenta? <a href="{{ route('registro') }}">Regístrate aquí</a></p>
+            <p class="link-text">
+                ¿No tienes cuenta? <a href="{{ route('registro') }}">Regístrate aquí</a>
+            </p>
         </form>
     </div>
-
-    <script>
-        function generateCaptcha() {
-            fetch('/captcha/generate', {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al generar CAPTCHA');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('captcha-question').textContent = data.question;
-                    document.getElementById('captcha-token').value = data.token;
-                    document.getElementById('captcha-answer').value = '';
-                } else {
-                    throw new Error(data.error || 'Error desconocido');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('captcha-question').textContent = 'Error al cargar. Haz clic en 🔄';
-            });
-        }
-
-        document.getElementById('refresh-captcha').addEventListener('click', generateCaptcha);
-        
-      
-        window.addEventListener('DOMContentLoaded', generateCaptcha);
-    </script>
 </body>
 </html>

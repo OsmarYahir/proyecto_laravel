@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
+use App\Helpers\RecaptchaHelper;
 
 class RegisterController extends Controller
 {
@@ -15,45 +16,33 @@ class RegisterController extends Controller
     }
 
     public function store(Request $request) {
-        // Validar CAPTCHA primero
         try {
-            $userAnswer = $request->input('captcha_answer');
-            $token = $request->input('captcha_token');
+            // Validar reCAPTCHA de Google
+            $recaptchaResponse = $request->input('g-recaptcha-response');
             
-            if (!$token || !$userAnswer) {
-                return back()->withErrors(['captcha_answer' => 'Por favor completa la verificación de seguridad'])->withInput();
+            if (!RecaptchaHelper::verify($recaptchaResponse)) {
+                return redirect()->route('error')
+                    ->with('error', 'Por favor verifica que no eres un robot.');
             }
-            
 
-            $correctAnswer = Crypt::decryptString($token);
-            
-            if ((string)$userAnswer !== (string)$correctAnswer) {
-                return back()->withErrors(['captcha_answer' => 'La respuesta es incorrecta. Intenta de nuevo'])->withInput();
-            }
-            
-        } catch (\Exception $e) {
-            return back()->withErrors(['captcha_answer' => 'Error en la verificación. Por favor recarga la página'])->withInput();
-        }
+            // Validar datos del formulario
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|min:3',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+                'telefono' => 'nullable|string|max:15',
+            ], [
+                'name.required' => 'El nombre es obligatorio',
+                'name.min' => 'El nombre debe tener al menos 3 caracteres',
+                'email.required' => 'El correo electrónico es obligatorio',
+                'email.email' => 'El formato del correo no es válido',
+                'email.unique' => 'Este correo ya está registrado',
+                'password.required' => 'La contraseña es obligatoria',
+                'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+                'password.confirmed' => 'Las contraseñas no coinciden',
+            ]);
 
-      
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|min:3',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'telefono' => 'nullable|string|max:15',
-        ], [
-            'name.required' => 'El nombre es obligatorio',
-            'name.min' => 'El nombre debe tener al menos 3 caracteres',
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.email' => 'El formato del correo no es válido',
-            'email.unique' => 'Este correo ya está registrado',
-            'password.required' => 'La contraseña es obligatoria',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres',
-            'password.confirmed' => 'Las contraseñas no coinciden',
-        ]);
-
-        try {
-          
+            // Crear usuario en la base de datos
             User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -61,9 +50,23 @@ class RegisterController extends Controller
                 'telefono' => $validated['telefono'] ?? null,
             ]);
 
-            return redirect()->route('login')->with('success', '¡Cuenta creada con éxito! Ya puedes iniciar sesión.');
+            return redirect()
+                ->route('login')
+                ->with('success', '¡Cuenta creada con éxito! Ya puedes iniciar sesión.');
+                
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = collect($e->errors())->flatten()->implode('. ');
+            return redirect()->route('error')->with('error', 'Errores de validación: ' . $errors);
+            
         } catch (\Exception $e) {
-            return redirect()->route('error')->with('error', 'Error al crear la cuenta: ' . $e->getMessage());
+            Log::error('Error creando usuario', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()
+                ->route('error')
+                ->with('error', 'Error al crear la cuenta. Por favor intenta de nuevo.');
         }
     }
 }
