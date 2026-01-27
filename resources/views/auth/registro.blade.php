@@ -156,6 +156,9 @@
         <a href="/login">Login</a>
     </div>
 
+     <x-breadcrumbs />
+
+
     <div class="login-container">
         <form action="{{ secure_url(route('registro.store')) }}" method="POST" class="login-card">
             @csrf
