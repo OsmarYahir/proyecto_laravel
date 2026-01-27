@@ -8,7 +8,8 @@ export default defineConfig({
                 'resources/css/navbar.css',
                 'resources/js/navbar.js', 
                 'resources/css/inicio.css',
-                'resources/js/inicio.js'
+                'resources/js/inicio.js',
+                'resources/css/error.css',
             ],
             refresh: true,
         }),
