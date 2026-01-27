@@ -6,7 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Registro - TIKET MANIA</title>
 
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <style>
         * {
             margin: 0;
@@ -16,7 +15,8 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
         }
 
@@ -25,12 +25,25 @@
             padding: 15px;
             color: white;
             margin-bottom: 20px;
+            border-radius: 8px;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
             margin-right: 20px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumbs {
+            background: white;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
         }
 
         .login-container {
@@ -41,11 +54,14 @@
         .login-card {
             background: white;
             padding: 30px;
-            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         h2 {
             margin-bottom: 20px;
+            color: #333;
+            text-align: center;
         }
 
         .input-group {
@@ -56,35 +72,81 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: #555;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .alert ul {
+            margin: 0;
+            padding-left: 20px;
         }
 
         .btn-login {
             width: 100%;
-            padding: 12px;
-            background: #333;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
             margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .link-text {
             margin-top: 15px;
             text-align: center;
+            color: #666;
         }
 
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #f5c6cb;
+        .link-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link-text a:hover {
+            text-decoration: underline;
         }
 
         .recaptcha-container {
@@ -98,7 +160,7 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <!-- Navbar ultra básica -->
+    <!-- Navbar -->
     <div class="navbar">
         <a href="/">TIKET MANIA</a>
         <a href="/conciertos">Conciertos</a>
@@ -106,51 +168,106 @@
         <a href="/login">Login</a>
     </div>
 
-     <x-breadcrumbs />
-
+    <x-breadcrumbs />
 
     <div class="login-container">
-        <form action="{{ secure_url(route('registro.store')) }}" method="POST" class="login-card">
+        <form action="{{ route('registro.store') }}" method="POST" class="login-card">
             @csrf
             <h2>Crea tu cuenta</h2>
 
+            <!-- Mostrar TODOS los errores juntos -->
             @if ($errors->any())
-                <div class="error-message">
-                    @foreach ($errors->all() as $error)
-                        {{ $error }}<br>
-                    @endforeach
+                <div class="alert alert-danger">
+                    <strong>⚠️ Por favor corrige los siguientes errores:</strong>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
 
             <div class="input-group">
-                <label>Nombre Completo</label>
-                <input type="text" name="name" value="{{ old('name') }}" required minlength="3">
+                <label>Nombre Completo *</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    value="{{ old('name') }}" 
+                    required 
+                    minlength="3"
+                    placeholder="Ej: Juan Pérez"
+                    class="{{ $errors->has('name') ? 'error' : '' }}"
+                >
+                @error('name')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="input-group">
-                <label>Correo Electrónico</label>
-                <input type="email" name="email" value="{{ old('email') }}" required>
+                <label>Correo Electrónico *</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    value="{{ old('email') }}" 
+                    required
+                    placeholder="tu@email.com"
+                    class="{{ $errors->has('email') ? 'error' : '' }}"
+                >
+                @error('email')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="input-group">
                 <label>Teléfono (opcional)</label>
-                <input type="tel" name="telefono" value="{{ old('telefono') }}">
+                <input 
+                    type="tel" 
+                    name="telefono" 
+                    value="{{ old('telefono') }}"
+                    placeholder="5512345678"
+                    maxlength="15"
+                >
+                @error('telefono')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="input-group">
-                <label>Contraseña</label>
-                <input type="password" name="password" required minlength="8">
+                <label>Contraseña *</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    required 
+                    minlength="8"
+                    placeholder="Mínimo 8 caracteres"
+                    class="{{ $errors->has('password') ? 'error' : '' }}"
+                >
+                @error('password')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="input-group">
-                <label>Confirmar Contraseña</label>
-                <input type="password" name="password_confirmation" required minlength="8">
+                <label>Confirmar Contraseña *</label>
+                <input 
+                    type="password" 
+                    name="password_confirmation" 
+                    required 
+                    minlength="8"
+                    placeholder="Repite tu contraseña"
+                    class="{{ $errors->has('password') ? 'error' : '' }}"
+                >
             </div>
 
-            <!-- reCAPTCHA centrado -->
+            <!-- reCAPTCHA -->
             <div class="recaptcha-container">
                 <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
             </div>
+            @error('recaptcha')
+                <div style="text-align: center;">
+                    <span class="error-text">{{ $message }}</span>
+                </div>
+            @enderror
 
             <button type="submit" class="btn-login">Registrarse</button>
             

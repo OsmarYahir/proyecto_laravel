@@ -16,41 +16,41 @@ class RegisterController extends Controller
     }
 
     public function store(Request $request) {
-        try {
-            // Validar reCAPTCHA de Google
-            $recaptchaResponse = $request->input('g-recaptcha-response');
-            
-            // Si no hay respuesta de reCAPTCHA o la validación falla
-            if (!RecaptchaHelper::verify($recaptchaResponse)) {
-                Log::warning('reCAPTCHA falló en registro', [
-                    'ip' => $request->ip(),
-                    'email' => $request->input('email')
-                ]);
-                
-                // Redirigir a la vista de error
-                return redirect()
-                    ->route('error')
-                    ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
-            }
-
-            // Validar datos del formulario
-            $validated = $request->validate([
-                'name' => 'required|string|max:255|min:3',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|confirmed',
-                'telefono' => 'nullable|string|max:15',
-            ], [
-                'name.required' => 'El nombre es obligatorio',
-                'name.min' => 'El nombre debe tener al menos 3 caracteres',
-                'email.required' => 'El correo electrónico es obligatorio',
-                'email.email' => 'El formato del correo no es válido',
-                'email.unique' => 'Este correo ya está registrado',
-                'password.required' => 'La contraseña es obligatoria',
-                'password.min' => 'La contraseña debe tener al menos 8 caracteres',
-                'password.confirmed' => 'Las contraseñas no coinciden',
+        // 1. Validar reCAPTCHA PRIMERO
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+        
+        if (!RecaptchaHelper::verify($recaptchaResponse)) {
+            Log::warning('reCAPTCHA falló en registro', [
+                'ip' => $request->ip(),
+                'email' => $request->input('email')
             ]);
+            
+            // Volver al formulario con el error
+            return back()
+                ->withErrors(['recaptcha' => 'Por favor verifica que no eres un robot.'])
+                ->withInput();
+        }
 
-            // Crear usuario en la base de datos
+        // 2. Validar datos del formulario
+        // Laravel automáticamente vuelve al formulario si hay errores
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|min:3',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'telefono' => 'nullable|string|max:15',
+        ], [
+            'name.required' => 'El nombre es obligatorio',
+            'name.min' => 'El nombre debe tener al menos 3 caracteres',
+            'email.required' => 'El correo electrónico es obligatorio',
+            'email.email' => 'El formato del correo no es válido',
+            'email.unique' => 'Este correo ya está registrado',
+            'password.required' => 'La contraseña es obligatoria',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+            'password.confirmed' => 'Las contraseñas no coinciden',
+        ]);
+
+        // 3. Intentar crear el usuario
+        try {
             User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -66,22 +66,16 @@ class RegisterController extends Controller
                 ->route('login')
                 ->with('success', '¡Cuenta creada con éxito! Ya puedes iniciar sesión.');
                 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $errors = collect($e->errors())->flatten()->implode('. ');
-            
-            return redirect()
-                ->route('error')
-                ->with('error', '❌ Errores de validación: ' . $errors);
-            
         } catch (\Exception $e) {
             Log::error('Error creando usuario', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
+            // Si hay un error de BD, redirigir a la página de error
             return redirect()
                 ->route('error')
-                ->with('error', '❌ Error al crear la cuenta. Por favor intenta de nuevo.');
+                ->with('error', 'Error al crear la cuenta. Por favor intenta de nuevo.');
         }
     }
 }
