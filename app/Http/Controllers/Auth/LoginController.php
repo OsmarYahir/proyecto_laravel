@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
+use App\Helpers\RecaptchaHelper;
 
 class LoginController extends Controller
 {
@@ -14,46 +15,70 @@ class LoginController extends Controller
     }
 
     public function store(Request $request) {
-       
         try {
-            $userAnswer = $request->input('captcha_answer');
-            $token = $request->input('captcha_token');
+            // Validar reCAPTCHA de Google
+            $recaptchaResponse = $request->input('g-recaptcha-response');
             
-            if (!$token || !$userAnswer) {
-                return back()->withErrors(['captcha_answer' => 'Por favor completa la verificación de seguridad'])->withInput();
+            // Si no hay respuesta de reCAPTCHA o la validación falla
+            if (!RecaptchaHelper::verify($recaptchaResponse)) {
+                Log::warning('reCAPTCHA falló en login', [
+                    'ip' => $request->ip(),
+                    'email' => $request->input('email')
+                ]);
+                
+                // Redirigir a la vista de error
+                return redirect()
+                    ->route('error')
+                    ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
-            
-          
-            $correctAnswer = Crypt::decryptString($token);
-            
-            if ((string)$userAnswer !== (string)$correctAnswer) {
-                return back()->withErrors(['captcha_answer' => 'La respuesta es incorrecta. Intenta de nuevo'])->withInput();
+
+            // Validar credenciales
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ], [
+                'email.required' => 'El correo electrónico es obligatorio',
+                'email.email' => 'El formato del correo no es válido',
+                'password.required' => 'La contraseña es obligatoria',
+            ]);
+
+            // Intentar login
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                
+                Log::info('Usuario inició sesión', [
+                    'email' => $credentials['email']
+                ]);
+                
+                return redirect()->intended('/')->with('success', '¡Bienvenido de nuevo!');
             }
+
+            // Si las credenciales no coinciden
+            Log::warning('Intento de login fallido', [
+                'email' => $credentials['email'],
+                'ip' => $request->ip()
+            ]);
+
+            return redirect()
+                ->route('error')
+                ->with('error', '❌ Las credenciales no coinciden con nuestros registros.');
+                
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = collect($e->errors())->flatten()->implode('. ');
+            
+            return redirect()
+                ->route('error')
+                ->with('error', '❌ ' . $errors);
             
         } catch (\Exception $e) {
-            return back()->withErrors(['captcha_answer' => 'Error en la verificación. Por favor recarga la página'])->withInput();
-        }
-
-      
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ], [
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.email' => 'El formato del correo no es válido',
-            'password.required' => 'La contraseña es obligatoria',
-        ]);
-
-   
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            Log::error('Error en login', [
+                'message' => $e->getMessage()
+            ]);
             
-            return redirect()->intended('/')->with('success', '¡Bienvenido de nuevo!');
+            return redirect()
+                ->route('error')
+                ->with('error', '❌ Error al iniciar sesión. Por favor intenta de nuevo.');
         }
-
-        return back()->withErrors([
-            'email' => 'Las credenciales no coinciden con nuestros registros.',
-        ])->withInput();
     }
 
     public function destroy(Request $request) {

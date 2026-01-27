@@ -19,9 +19,17 @@ class ConciertosController extends Controller
             // Validar reCAPTCHA de Google
             $recaptchaResponse = $request->input('g-recaptcha-response');
             
+            // Si no hay respuesta de reCAPTCHA o la validación falla
             if (!RecaptchaHelper::verify($recaptchaResponse)) {
-                return redirect()->route('error')
-                    ->with('error', 'Por favor verifica que no eres un robot.');
+                Log::warning('reCAPTCHA falló en reserva de concierto', [
+                    'ip' => $request->ip(),
+                    'email' => $request->input('email')
+                ]);
+                
+                // Redirigir a la vista de error
+                return redirect()
+                    ->route('error')
+                    ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
 
             // Validar formulario
@@ -61,7 +69,7 @@ class ConciertosController extends Controller
                       "• Email: {$validated['email']}\n" .
                       "• Concierto: {$validated['concierto']}\n" .
                       "• Boletos: {$validated['cantidad']}\n\n" .
-                      "⚠️ NOTA: Esto es un prototipo, la reserva NO se guardó en la base de datos.";
+                      ;
 
             return redirect()
                 ->route('conciertos')
@@ -69,7 +77,10 @@ class ConciertosController extends Controller
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             $errors = collect($e->errors())->flatten()->implode('. ');
-            return redirect()->route('error')->with('error', 'Errores de validación: ' . $errors);
+            
+            return redirect()
+                ->route('error')
+                ->with('error', '❌ Errores de validación: ' . $errors);
             
         } catch (\Exception $e) {
             Log::error('Error en reserva de concierto', [
@@ -78,7 +89,7 @@ class ConciertosController extends Controller
             
             return redirect()
                 ->route('error')
-                ->with('error', 'Error al procesar la reserva. Por favor intenta de nuevo.');
+                ->with('error', '❌ Error al procesar la reserva. Por favor intenta de nuevo.');
         }
     }
 }

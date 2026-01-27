@@ -20,9 +20,17 @@ class RegisterController extends Controller
             // Validar reCAPTCHA de Google
             $recaptchaResponse = $request->input('g-recaptcha-response');
             
+            // Si no hay respuesta de reCAPTCHA o la validación falla
             if (!RecaptchaHelper::verify($recaptchaResponse)) {
-                return redirect()->route('error')
-                    ->with('error', 'Por favor verifica que no eres un robot.');
+                Log::warning('reCAPTCHA falló en registro', [
+                    'ip' => $request->ip(),
+                    'email' => $request->input('email')
+                ]);
+                
+                // Redirigir a la vista de error
+                return redirect()
+                    ->route('error')
+                    ->with('error', '❌ Verificación de seguridad fallida. Por favor completa el reCAPTCHA correctamente.');
             }
 
             // Validar datos del formulario
@@ -50,13 +58,20 @@ class RegisterController extends Controller
                 'telefono' => $validated['telefono'] ?? null,
             ]);
 
+            Log::info('Usuario registrado exitosamente', [
+                'email' => $validated['email']
+            ]);
+
             return redirect()
                 ->route('login')
                 ->with('success', '¡Cuenta creada con éxito! Ya puedes iniciar sesión.');
                 
         } catch (\Illuminate\Validation\ValidationException $e) {
             $errors = collect($e->errors())->flatten()->implode('. ');
-            return redirect()->route('error')->with('error', 'Errores de validación: ' . $errors);
+            
+            return redirect()
+                ->route('error')
+                ->with('error', '❌ Errores de validación: ' . $errors);
             
         } catch (\Exception $e) {
             Log::error('Error creando usuario', [
@@ -66,7 +81,7 @@ class RegisterController extends Controller
             
             return redirect()
                 ->route('error')
-                ->with('error', 'Error al crear la cuenta. Por favor intenta de nuevo.');
+                ->with('error', '❌ Error al crear la cuenta. Por favor intenta de nuevo.');
         }
     }
 }
