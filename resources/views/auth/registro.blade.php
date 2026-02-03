@@ -6,147 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Registro - TIKET MANIA</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-        }
-
-        .navbar {
-            background: #333;
-            padding: 15px;
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-right: 20px;
-        }
-
-        .login-container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .login-card {
-            background: white;
-            padding: 30px;
-            border: 1px solid #ddd;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        label .required {
-            color: #dc3545;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #333;
-        }
-
-        .help-text {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-            display: block;
-        }
-
-        .error {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 5px;
-            display: block;
-            font-weight: 500;
-        }
-
-        .input-error {
-            border-color: #dc3545 !important;
-            background-color: #fff5f5;
-        }
-
-        .input-valid {
-            border-color: #28a745;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .btn-login:hover {
-            background: #555;
-        }
-
-        .link-text {
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .error-summary {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-        }
-
-        .error-summary strong {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .error-summary ul {
-            margin-left: 20px;
-            margin-top: 5px;
-        }
-
-        .recaptcha-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-    </style>
-    
-    <!-- Google reCAPTCHA -->
+    <link rel="stylesheet" href="registro.css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @vite(['resources/css/register.css', 'resources/js/register.js'])
 </head>
 <body>
     <div class="navbar">
@@ -156,11 +18,10 @@
         <a href="/login">Login</a>
     </div>
 
-     <x-breadcrumbs />
-
+    <x-breadcrumbs />
 
     <div class="login-container">
-        <form action="{{ secure_url(route('registro.store')) }}" method="POST" class="login-card">
+        <form action="{{ secure_url(route('registro.store')) }}" method="POST" class="login-card" id="registroForm">
             @csrf
             <h2>Crea tu cuenta</h2>
 
@@ -175,85 +36,82 @@
                 </div>
             @endif
 
+            <!-- NOMBRE -->
             <div class="input-group">
                 <label>Nombre Completo <span class="required">*</span></label>
                 <input 
                     type="text" 
                     name="name" 
+                    id="name"
                     value="{{ old('name') }}" 
                     required 
                     placeholder="Juan Pérez García"
                     class="{{ $errors->has('name') ? 'input-error' : (old('name') ? 'input-valid' : '') }}"
                 >
-                @error('name')
-                    <span class="error">❌ {{ $message }}</span>
-                @else
-                    <span class="help-text">✓ Solo letras y espacios</span>
-                @enderror
+                <span class="error" id="name-error"></span>
+                <span class="help-text" id="name-help">✓ Solo letras y espacios</span>
             </div>
 
+            <!-- EMAIL -->
             <div class="input-group">
                 <label>Correo Electrónico <span class="required">*</span></label>
                 <input 
                     type="email" 
                     name="email" 
+                    id="email"
                     value="{{ old('email') }}" 
                     required
                     placeholder="ejemplo@correo.com"
                     class="{{ $errors->has('email') ? 'input-error' : (old('email') ? 'input-valid' : '') }}"
                 >
-                @error('email')
-                    <span class="error">❌ {{ $message }}</span>
-                @else
-                    <span class="help-text">✓ Formato válido: usuario@dominio.com</span>
-                @enderror
+                <span class="error" id="email-error"></span>
+                <span class="help-text" id="email-help">✓ Formato válido: usuario@dominio.com</span>
             </div>
 
+            <!-- TELÉFONO -->
             <div class="input-group">
                 <label>Teléfono (opcional)</label>
                 <input 
                     type="tel" 
                     name="telefono" 
+                    id="telefono"
                     value="{{ old('telefono') }}"
                     placeholder="5512345678"
                     maxlength="10"
                     class="{{ $errors->has('telefono') ? 'input-error' : (old('telefono') ? 'input-valid' : '') }}"
                 >
-                @error('telefono')
-                    <span class="error">❌ {{ $message }}</span>
-                @else
-                    <span class="help-text">✓ 10 dígitos (opcional)</span>
-                @enderror
+                <span class="error" id="telefono-error"></span>
+                <span class="help-text" id="telefono-help">✓ 10 dígitos (opcional)</span>
             </div>
 
+            <!-- CONTRASEÑA -->
             <div class="input-group">
                 <label>Contraseña <span class="required">*</span></label>
                 <input 
                     type="password" 
                     name="password" 
+                    id="password"
                     required
                     placeholder="Mínimo 8 caracteres"
                     class="{{ $errors->has('password') ? 'input-error' : '' }}"
                 >
-                @error('password')
-                    <span class="error">❌ {{ $message }}</span>
-                @else
-                    <span class="help-text">✓ Mínimo 8 caracteres: 1 mayúscula, 1 minúscula, 1 número</span>
-                @enderror
+                <span class="error" id="password-error"></span>
+                <span class="help-text" id="password-help">✓ Mínimo 8 caracteres: 1 mayúscula, 1 minúscula, 1 número</span>
             </div>
 
+            <!-- CONFIRMAR CONTRASEÑA -->
             <div class="input-group">
                 <label>Confirmar Contraseña <span class="required">*</span></label>
                 <input 
                     type="password" 
                     name="password_confirmation" 
+                    id="password_confirmation"
                     required
                     placeholder="Repite tu contraseña"
                     class="{{ $errors->has('password') ? 'input-error' : '' }}"
                 >
-                @if(!$errors->has('password'))
-                    <span class="help-text">✓ Debe coincidir con la contraseña</span>
-                @endif
+                <span class="error" id="password_confirmation-error"></span>
+                <span class="help-text" id="password_confirmation-help">✓ Debe coincidir con la contraseña</span>
             </div>
 
             <!-- reCAPTCHA -->
@@ -268,5 +126,7 @@
             </p>
         </form>
     </div>
+
+    <script src="validaciones.js"></script>
 </body>
 </html>
