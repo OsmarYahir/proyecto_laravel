@@ -113,6 +113,9 @@
         <a href="/login">Login</a>
     </div>
 
+     <x-breadcrumbs />
+
+
     <div class="login-container">
         <!-- IMPORTANTE: secure_url() fuerza HTTPS en el action -->
         <form action="{{ secure_url(route('login.store')) }}" method="POST" class="login-card">
