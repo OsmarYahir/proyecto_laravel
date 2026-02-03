@@ -34,3 +34,8 @@ Route::fallback(function () {
         ->with('error', 'Error 404: La página que buscas no existe o fue movida.');
 });
 
+use App\Http\Controllers\ImagenesController;
+
+Route::get('/imagenes', [ImagenesController::class, 'index'])->name('imagenes.index');
+Route::post('/imagenes', [ImagenesController::class, 'store'])->name('imagenes.store');
+Route::delete('/imagenes/{id}', [ImagenesController::class, 'destroy'])->name('imagenes.destroy');

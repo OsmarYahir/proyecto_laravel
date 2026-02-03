@@ -16,7 +16,7 @@ class ConciertosController extends Controller
     public function reservar(Request $request)
     {
         try {
-            // Validar reCAPTCHA - SI FALLA, VA A /ERROR
+            // Validar reCAPTCHA
             $recaptchaResponse = $request->input('g-recaptcha-response');
             
             if (!RecaptchaHelper::verify($recaptchaResponse)) {
@@ -26,28 +26,28 @@ class ConciertosController extends Controller
                 
                 return redirect()
                     ->route('error')
-                    ->with('error', '❌ Por favor completa el reCAPTCHA.');
+                    ->with('error', 'Por favor completa el reCAPTCHA.');
             }
 
-            // VALIDACIONES CON EXPRESIONES REGULARES - ERRORES SE MUESTRAN EN EL FORMULARIO
+            // Validaciones con expresiones regulares
             $validated = $request->validate([
                 'nombre' => [
                     'required',
                     'string',
                     'min:3',
                     'max:100',
-                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/' // Solo letras (con acentos) y espacios
+                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'
                 ],
                 'email' => [
                     'required',
                     'email',
                     'max:255',
-                    'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/' // Email válido
+                    'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
                 ],
                 'telefono' => [
                     'required',
                     'string',
-                    'regex:/^[0-9]{10}$/' // Exactamente 10 números
+                    'regex:/^[0-9]{10}$/'
                 ],
                 'concierto' => [
                     'required',
@@ -61,18 +61,17 @@ class ConciertosController extends Controller
                     'max:10'
                 ]
             ], [
-                // Mensajes personalizados por cada validación
                 'nombre.required' => 'El nombre es obligatorio',
                 'nombre.min' => 'El nombre debe tener al menos 3 caracteres',
                 'nombre.max' => 'El nombre no puede exceder 100 caracteres',
-                'nombre.regex' => 'El nombre solo puede contener letras y espacios (sin números ni símbolos)',
+                'nombre.regex' => 'El nombre solo puede contener letras y espacios',
                 
                 'email.required' => 'El correo electrónico es obligatorio',
                 'email.email' => 'El formato del correo no es válido',
-                'email.regex' => 'El correo debe tener un formato válido (ejemplo@dominio.com)',
+                'email.regex' => 'El correo debe tener un formato válido',
                 
                 'telefono.required' => 'El teléfono es obligatorio',
-                'telefono.regex' => 'El teléfono debe tener exactamente 10 dígitos numéricos (sin guiones ni espacios)',
+                'telefono.regex' => 'El teléfono debe tener exactamente 10 dígitos numéricos',
                 
                 'concierto.required' => 'Debes seleccionar un concierto',
                 'concierto.in' => 'El concierto seleccionado no es válido',
@@ -105,17 +104,17 @@ class ConciertosController extends Controller
                 'timestamp' => now()
             ]);
 
-            // Mensaje de éxito detallado
-            $mensaje = "🎉 ¡Reserva realizada con éxito!\n\n" .
-                      "📋 DETALLES:\n" .
-                      "━━━━━━━━━━━━━━━━━━━━\n" .
-                      "👤 Nombre: {$validated['nombre']}\n" .
-                      "📧 Email: {$validated['email']}\n" .
-                      "📱 Teléfono: {$validated['telefono']}\n" .
-                      "🎫 Concierto: {$validated['concierto']}\n" .
-                      "🎟️ Boletos: {$validated['cantidad']}\n" .
-                      "💰 Total: $" . number_format($precioTotal, 2) . " MXN\n\n" .
-                      "⚠️ NOTA: Esto es un prototipo.\n" .
+            // Mensaje de éxito sin emojis
+            $mensaje = "Reserva realizada con éxito\n\n" .
+                      "DETALLES DE LA RESERVA:\n" .
+                      "------------------------\n" .
+                      "Nombre: {$validated['nombre']}\n" .
+                      "Email: {$validated['email']}\n" .
+                      "Teléfono: {$validated['telefono']}\n" .
+                      "Concierto: {$validated['concierto']}\n" .
+                      "Boletos: {$validated['cantidad']}\n" .
+                      "Total: $" . number_format($precioTotal, 2) . " MXN\n\n" .
+                      "NOTA: Esto es un prototipo.\n" .
                       "La reserva NO se guardó en la base de datos.";
 
             return redirect()
@@ -123,7 +122,6 @@ class ConciertosController extends Controller
                 ->with('success', $mensaje);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Los errores de validación SE MUESTRAN EN EL FORMULARIO
             return back()->withErrors($e->validator)->withInput();
             
         } catch (\Exception $e) {
@@ -134,7 +132,7 @@ class ConciertosController extends Controller
             
             return redirect()
                 ->route('error')
-                ->with('error', '❌ Error al procesar la reserva. Por favor intenta de nuevo.');
+                ->with('error', 'Error al procesar la reserva. Por favor intenta de nuevo.');
         }
     }
 }

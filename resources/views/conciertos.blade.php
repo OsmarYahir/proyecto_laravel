@@ -36,6 +36,10 @@
             margin: 0 auto;
         }
 
+        h1 {
+            margin-bottom: 20px;
+        }
+
         .concierto {
             background: white;
             padding: 20px;
@@ -59,15 +63,18 @@
             margin-top: 30px;
         }
 
-        .input-group {
+        h2 {
             margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: bold;
-            color: #333;
             font-size: 14px;
         }
 
@@ -77,7 +84,7 @@
 
         input, select {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ccc;
             font-size: 14px;
             transition: border-color 0.3s;
@@ -95,7 +102,6 @@
             display: block;
         }
 
-        /* Estilos para errores */
         .error {
             color: #dc3545;
             font-size: 13px;
@@ -109,14 +115,14 @@
             background-color: #fff5f5;
         }
 
-        /* Estilos para inputs válidos (cuando tienen valor y no hay error) */
         .input-valid {
-            border-color: #28a745;
+            border-color: #28a745 !important;
+            background-color: #f0fff4;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #333;
             color: white;
             border: none;
@@ -133,10 +139,9 @@
         .success-message {
             background: #d4edda;
             color: #155724;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
             border: 1px solid #c3e6cb;
-            border-radius: 4px;
             white-space: pre-line;
             line-height: 1.6;
         }
@@ -144,31 +149,19 @@
         .error-summary {
             background: #f8d7da;
             color: #721c24;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
             border: 1px solid #f5c6cb;
-            border-radius: 4px;
         }
 
         .error-summary strong {
             display: block;
             margin-bottom: 10px;
-            font-size: 16px;
         }
 
         .error-summary ul {
             margin-left: 20px;
-            margin-top: 10px;
-        }
-
-        .error-summary li {
-            margin-bottom: 5px;
-        }
-
-        .recaptcha-container {
-            display: flex;
-            justify-content: center;
-            margin: 25px 0;
+            margin-top: 5px;
         }
 
         .warning {
@@ -177,23 +170,19 @@
             padding: 12px;
             margin-bottom: 20px;
             border: 1px solid #ffeaa7;
-            border-radius: 4px;
             font-size: 14px;
         }
 
-        /* Indicador visual de campo obligatorio */
-        .field-icon {
-            display: inline-block;
-            margin-left: 5px;
-            font-size: 12px;
+        .recaptcha-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
         }
     </style>
     
-    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <!-- Navbar ultra básica -->
     <div class="navbar">
         <a href="/">TIKET MANIA</a>
         <a href="/conciertos">Conciertos</a>
@@ -202,48 +191,44 @@
         <a href="/login">Login</a>
     </div>
 
-    <!-- Breadcrumbs -->
     <x-breadcrumbs />
 
     <div class="container">
         <h1>Próximos Conciertos</h1>
-        <br>
 
-        <!-- Lista de Conciertos -->
         <div class="concierto">
-            <h3>🎸 Rock Festival 2026</h3>
-            <p>📅 15 de Marzo, 2026 - 20:00 hrs</p>
-            <p>📍 Foro Sol, Ciudad de México</p>
-            <p>💰 Desde $850 MXN</p>
+            <h3>Rock Festival 2026</h3>
+            <p>Fecha: 15 de Marzo, 2026 - 20:00 hrs</p>
+            <p>Lugar: Foro Sol, Ciudad de México</p>
+            <p>Precio: Desde $850 MXN</p>
         </div>
 
         <div class="concierto">
-            <h3>🎧 Festival Electrónico</h3>
-            <p>📅 22 de Abril, 2026 - 18:00 hrs</p>
-            <p>📍 Arena Guadalajara, Jalisco</p>
-            <p>💰 Desde $650 MXN</p>
+            <h3>Festival Electrónico</h3>
+            <p>Fecha: 22 de Abril, 2026 - 18:00 hrs</p>
+            <p>Lugar: Arena Guadalajara, Jalisco</p>
+            <p>Precio: Desde $650 MXN</p>
         </div>
 
         <div class="concierto">
-            <h3>🎼 Concierto Sinfónico</h3>
-            <p>📅 5 de Mayo, 2026 - 19:00 hrs</p>
-            <p>📍 Auditorio Nacional, CDMX</p>
-            <p>💰 Desde $450 MXN</p>
+            <h3>Concierto Sinfónico</h3>
+            <p>Fecha: 5 de Mayo, 2026 - 19:00 hrs</p>
+            <p>Lugar: Auditorio Nacional, CDMX</p>
+            <p>Precio: Desde $450 MXN</p>
         </div>
 
         <div class="concierto">
-            <h3>🎤 Pop Latino Tour</h3>
-            <p>📅 18 de Junio, 2026 - 21:00 hrs</p>
-            <p>📍 Estadio Monterrey, Nuevo León</p>
-            <p>💰 Desde $950 MXN</p>
+            <h3>Pop Latino Tour</h3>
+            <p>Fecha: 18 de Junio, 2026 - 21:00 hrs</p>
+            <p>Lugar: Estadio Monterrey, Nuevo León</p>
+            <p>Precio: Desde $950 MXN</p>
         </div>
 
-        <!-- Formulario de Reserva -->
         <div class="formulario">
-            <h2>📝 Reserva tu boleto</h2>
+            <h2>Reserva tu boleto</h2>
             
             <div class="warning">
-                ⚠️ <strong>Prototipo:</strong> Este formulario NO guarda en base de datos
+                <strong>Prototipo:</strong> Este formulario NO guarda en base de datos
             </div>
 
             @if (session('success'))
@@ -254,7 +239,7 @@
 
             @if ($errors->any())
                 <div class="error-summary">
-                    <strong>⚠️ Por favor corrige los siguientes errores:</strong>
+                    <strong>Por favor corrige los siguientes errores:</strong>
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -263,130 +248,276 @@
                 </div>
             @endif
 
-            <form action="{{ secure_url(route('conciertos.reservar')) }}" method="POST">
+            <form action="{{ secure_url(route('conciertos.reservar')) }}" method="POST" id="reservaForm">
                 @csrf
 
-                <!-- Nombre completo -->
                 <div class="input-group">
-                    <label>
-                        Nombre completo <span class="required">*</span>
-                    </label>
+                    <label>Nombre completo <span class="required">*</span></label>
                     <input 
                         type="text" 
                         name="nombre" 
+                        id="nombre"
                         value="{{ old('nombre') }}" 
                         required 
                         placeholder="Juan Pérez García"
                         class="{{ $errors->has('nombre') ? 'input-error' : (old('nombre') ? 'input-valid' : '') }}"
                     >
-                    @error('nombre')
-                        <span class="error">❌ {{ $message }}</span>
-                    @else
-                        <span class="help-text">✓ Solo letras y espacios (sin números ni símbolos)</span>
-                    @enderror
+                    <span class="error" id="nombre-error"></span>
+                    <span class="help-text" id="nombre-help">Solo letras y espacios</span>
                 </div>
 
-                <!-- Email -->
                 <div class="input-group">
-                    <label>
-                        Correo electrónico <span class="required">*</span>
-                    </label>
+                    <label>Correo electrónico <span class="required">*</span></label>
                     <input 
                         type="email" 
                         name="email" 
+                        id="email"
                         value="{{ old('email') }}" 
                         required
                         placeholder="ejemplo@correo.com"
                         class="{{ $errors->has('email') ? 'input-error' : (old('email') ? 'input-valid' : '') }}"
                     >
-                    @error('email')
-                        <span class="error">❌ {{ $message }}</span>
-                    @else
-                        <span class="help-text">✓ Formato: usuario@dominio.com</span>
-                    @enderror
+                    <span class="error" id="email-error"></span>
+                    <span class="help-text" id="email-help">Formato: usuario@dominio.com</span>
                 </div>
 
-                <!-- Teléfono -->
                 <div class="input-group">
-                    <label>
-                        Teléfono <span class="required">*</span>
-                    </label>
+                    <label>Teléfono <span class="required">*</span></label>
                     <input 
                         type="tel" 
                         name="telefono" 
+                        id="telefono"
                         value="{{ old('telefono') }}" 
                         required 
                         placeholder="5512345678"
                         maxlength="10"
                         class="{{ $errors->has('telefono') ? 'input-error' : (old('telefono') ? 'input-valid' : '') }}"
                     >
-                    @error('telefono')
-                        <span class="error">❌ {{ $message }}</span>
-                    @else
-                        <span class="help-text">✓ Exactamente 10 dígitos (solo números, sin guiones ni espacios)</span>
-                    @enderror
+                    <span class="error" id="telefono-error"></span>
+                    <span class="help-text" id="telefono-help">10 dígitos sin espacios ni guiones</span>
                 </div>
 
-                <!-- Concierto -->
                 <div class="input-group">
-                    <label>
-                        Selecciona concierto <span class="required">*</span>
-                    </label>
+                    <label>Selecciona concierto <span class="required">*</span></label>
                     <select 
                         name="concierto" 
+                        id="concierto"
                         required
                         class="{{ $errors->has('concierto') ? 'input-error' : (old('concierto') ? 'input-valid' : '') }}"
                     >
                         <option value="">-- Elige un concierto --</option>
                         <option value="Rock Festival 2026" {{ old('concierto') == 'Rock Festival 2026' ? 'selected' : '' }}>
-                            🎸 Rock Festival 2026 - $850 MXN
+                            Rock Festival 2026 - $850 MXN
                         </option>
                         <option value="Festival Electrónico" {{ old('concierto') == 'Festival Electrónico' ? 'selected' : '' }}>
-                            🎧 Festival Electrónico - $650 MXN
+                            Festival Electrónico - $650 MXN
                         </option>
                         <option value="Concierto Sinfónico" {{ old('concierto') == 'Concierto Sinfónico' ? 'selected' : '' }}>
-                            🎼 Concierto Sinfónico - $450 MXN
+                            Concierto Sinfónico - $450 MXN
                         </option>
                         <option value="Pop Latino Tour" {{ old('concierto') == 'Pop Latino Tour' ? 'selected' : '' }}>
-                            🎤 Pop Latino Tour - $950 MXN
+                            Pop Latino Tour - $950 MXN
                         </option>
                     </select>
-                    @error('concierto')
-                        <span class="error">❌ {{ $message }}</span>
-                    @else
-                        <span class="help-text">✓ Elige el evento al que deseas asistir</span>
-                    @enderror
+                    <span class="error" id="concierto-error"></span>
+                    <span class="help-text" id="concierto-help">Elige el evento al que deseas asistir</span>
                 </div>
 
-                <!-- Cantidad -->
                 <div class="input-group">
-                    <label>
-                        Cantidad de boletos <span class="required">*</span>
-                    </label>
+                    <label>Cantidad de boletos <span class="required">*</span></label>
                     <input 
                         type="number" 
                         name="cantidad" 
+                        id="cantidad"
                         value="{{ old('cantidad', 1) }}" 
                         required 
                         min="1" 
                         max="10"
                         class="{{ $errors->has('cantidad') ? 'input-error' : (old('cantidad') ? 'input-valid' : '') }}"
                     >
-                    @error('cantidad')
-                        <span class="error">❌ {{ $message }}</span>
-                    @else
-                        <span class="help-text">✓ Mínimo 1, máximo 10 boletos por reserva</span>
-                    @enderror
+                    <span class="error" id="cantidad-error"></span>
+                    <span class="help-text" id="cantidad-help">Mínimo 1, máximo 10 boletos</span>
                 </div>
 
-                <!-- reCAPTCHA -->
                 <div class="recaptcha-container">
                     <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                 </div>
 
-                <button type="submit" class="btn-submit">🎟️ Reservar Boletos</button>
+                <button type="submit" class="btn-submit">Reservar Boletos</button>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // NOMBRE
+            const nombreInput = document.getElementById('nombre');
+            const nombreError = document.getElementById('nombre-error');
+            const nombreHelp = document.getElementById('nombre-help');
+            
+            nombreInput.addEventListener('input', function() {
+                const value = this.value.trim();
+                const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+                
+                if (value === '') {
+                    nombreInput.classList.remove('input-valid', 'input-error');
+                    nombreError.textContent = '';
+                    nombreHelp.style.display = 'block';
+                } else if (value.length < 3) {
+                    nombreInput.classList.add('input-error');
+                    nombreInput.classList.remove('input-valid');
+                    nombreError.textContent = 'Debe tener al menos 3 caracteres';
+                    nombreHelp.style.display = 'none';
+                } else if (!regex.test(value)) {
+                    nombreInput.classList.add('input-error');
+                    nombreInput.classList.remove('input-valid');
+                    nombreError.textContent = 'Solo letras y espacios';
+                    nombreHelp.style.display = 'none';
+                } else {
+                    nombreInput.classList.add('input-valid');
+                    nombreInput.classList.remove('input-error');
+                    nombreError.textContent = '';
+                    nombreHelp.style.display = 'block';
+                }
+            });
+
+            // EMAIL
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('email-error');
+            const emailHelp = document.getElementById('email-help');
+            
+            emailInput.addEventListener('input', function() {
+                const value = this.value.trim();
+                const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                
+                if (value === '') {
+                    emailInput.classList.remove('input-valid', 'input-error');
+                    emailError.textContent = '';
+                    emailHelp.style.display = 'block';
+                } else if (!regex.test(value)) {
+                    emailInput.classList.add('input-error');
+                    emailInput.classList.remove('input-valid');
+                    emailError.textContent = 'Formato de correo inválido';
+                    emailHelp.style.display = 'none';
+                } else {
+                    emailInput.classList.add('input-valid');
+                    emailInput.classList.remove('input-error');
+                    emailError.textContent = '';
+                    emailHelp.style.display = 'block';
+                }
+            });
+
+            // TELÉFONO
+            const telefonoInput = document.getElementById('telefono');
+            const telefonoError = document.getElementById('telefono-error');
+            const telefonoHelp = document.getElementById('telefono-help');
+            
+            telefonoInput.addEventListener('input', function() {
+                const value = this.value.trim();
+                const regex = /^[0-9]{10}$/;
+                
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                if (value === '') {
+                    telefonoInput.classList.remove('input-valid', 'input-error');
+                    telefonoError.textContent = '';
+                    telefonoHelp.style.display = 'block';
+                } else if (value.length !== 10) {
+                    telefonoInput.classList.add('input-error');
+                    telefonoInput.classList.remove('input-valid');
+                    telefonoError.textContent = 'Debe tener exactamente 10 dígitos';
+                    telefonoHelp.style.display = 'none';
+                } else if (!regex.test(value)) {
+                    telefonoInput.classList.add('input-error');
+                    telefonoInput.classList.remove('input-valid');
+                    telefonoError.textContent = 'Solo números';
+                    telefonoHelp.style.display = 'none';
+                } else {
+                    telefonoInput.classList.add('input-valid');
+                    telefonoInput.classList.remove('input-error');
+                    telefonoError.textContent = '';
+                    telefonoHelp.style.display = 'block';
+                }
+            });
+
+            // CONCIERTO
+            const conciertoInput = document.getElementById('concierto');
+            const conciertoError = document.getElementById('concierto-error');
+            const conciertoHelp = document.getElementById('concierto-help');
+            
+            conciertoInput.addEventListener('change', function() {
+                const value = this.value;
+                
+                if (value === '') {
+                    conciertoInput.classList.remove('input-valid', 'input-error');
+                    conciertoError.textContent = '';
+                    conciertoHelp.style.display = 'block';
+                } else {
+                    conciertoInput.classList.add('input-valid');
+                    conciertoInput.classList.remove('input-error');
+                    conciertoError.textContent = '';
+                    conciertoHelp.style.display = 'block';
+                }
+            });
+
+            // CANTIDAD
+            const cantidadInput = document.getElementById('cantidad');
+            const cantidadError = document.getElementById('cantidad-error');
+            const cantidadHelp = document.getElementById('cantidad-help');
+            
+            cantidadInput.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                
+                if (isNaN(value) || value === '') {
+                    cantidadInput.classList.remove('input-valid', 'input-error');
+                    cantidadError.textContent = '';
+                    cantidadHelp.style.display = 'block';
+                } else if (value < 1) {
+                    cantidadInput.classList.add('input-error');
+                    cantidadInput.classList.remove('input-valid');
+                    cantidadError.textContent = 'Mínimo 1 boleto';
+                    cantidadHelp.style.display = 'none';
+                } else if (value > 10) {
+                    cantidadInput.classList.add('input-error');
+                    cantidadInput.classList.remove('input-valid');
+                    cantidadError.textContent = 'Máximo 10 boletos';
+                    cantidadHelp.style.display = 'none';
+                } else {
+                    cantidadInput.classList.add('input-valid');
+                    cantidadInput.classList.remove('input-error');
+                    cantidadError.textContent = '';
+                    cantidadHelp.style.display = 'block';
+                }
+            });
+
+            // VALIDAR ANTES DE ENVIAR
+            const form = document.getElementById('reservaForm');
+            
+            form.addEventListener('submit', function(e) {
+                nombreInput.dispatchEvent(new Event('input'));
+                emailInput.dispatchEvent(new Event('input'));
+                telefonoInput.dispatchEvent(new Event('input'));
+                conciertoInput.dispatchEvent(new Event('change'));
+                cantidadInput.dispatchEvent(new Event('input'));
+                
+                const errores = document.querySelectorAll('.input-error');
+                
+                if (errores.length > 0) {
+                    e.preventDefault();
+                    alert('Por favor corrige los errores antes de continuar');
+                }
+                
+                if (nombreInput.value.trim() === '' || 
+                    emailInput.value.trim() === '' || 
+                    telefonoInput.value.trim() === '' ||
+                    conciertoInput.value === '' ||
+                    cantidadInput.value === '') {
+                    e.preventDefault();
+                    alert('Por favor completa todos los campos obligatorios');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
