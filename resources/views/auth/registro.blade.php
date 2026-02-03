@@ -6,9 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Registro - TIKET MANIA</title>
-    <link rel="stylesheet" href="registro.css">
+    
+    <!-- CSS con función asset de Laravel -->
+    <link rel="stylesheet" href="{{ asset('css/registro.css') }}">
+    
+    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    @vite(['resources/css/register.css', 'resources/js/register.js'])
 </head>
 <body>
     <div class="navbar">
@@ -127,6 +130,7 @@
         </form>
     </div>
 
-    <script src="validaciones.js"></script>
+    <!-- JavaScript con función asset de Laravel -->
+    <script src="{{ asset('js/validaciones.js') }}"></script>
 </body>
 </html>
