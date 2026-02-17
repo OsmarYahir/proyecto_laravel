@@ -196,7 +196,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                      
                         <th>Nombre</th>
                         <th>Artista</th>
                         <th>Ubicación</th>
