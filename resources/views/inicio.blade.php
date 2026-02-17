@@ -90,8 +90,9 @@
     <!-- Navbar ultra básica -->
     <div class="navbar">
         <a href="/">TIKET MANIA</a>
-        <a href="/conciertos">Conciertos</a>
+        
          <a href="/imagenes">Imagenes</a>
+          <a href="/crud">CRUD</a>
         @auth
             <a href="/registro">Mi Cuenta</a>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
