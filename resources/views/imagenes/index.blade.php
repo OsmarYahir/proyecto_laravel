@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Galería de Imágenes - TIKET MANIA</title>
     <style>
         * {
@@ -387,7 +388,7 @@
         <div class="upload-form">
             <h2>Subir Nueva Imagen</h2>
 
-            <form action="{{ route('imagenes.store') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+            <form action="{{ secure_url(route(route('imagenes.store')) }}" method="POST" enctype="multipart/form-data" id="uploadForm">
                 @csrf
 
                 <div class="input-group">
