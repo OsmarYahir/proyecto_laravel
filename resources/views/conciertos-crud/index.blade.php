@@ -210,7 +210,7 @@
                 <tbody>
                     @foreach($conciertos as $concierto)
                         <tr>
-                            <td>{{ $concierto->id }}</td>
+                           
                             <td><strong>{{ $concierto->nombre }}</strong></td>
                             <td>{{ $concierto->artista }}</td>
                             <td>{{ $concierto->ubicacion }}</td>
