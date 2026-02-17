@@ -388,8 +388,8 @@
         <div class="upload-form">
             <h2>Subir Nueva Imagen</h2>
 
-            <form action="{{ secure_url(route(route('imagenes.store')) }}" method="POST" enctype="multipart/form-data" id="uploadForm">
-                @csrf
+          <form action="{{ secure_url(route('imagenes.store')) }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+            @csrf
 
                 <div class="input-group">
                     <label>Título (opcional)</label>
