@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ConciertosController;
+use App\Http\Controllers\ConciertoController;
+
 
 // Página de inicio
 Route::get('/', function () {
@@ -34,8 +36,23 @@ Route::fallback(function () {
         ->with('error', 'Error 404: La página que buscas no existe o fue movida.');
 });
 
+
+
+
 use App\Http\Controllers\ImagenesController;
 
 Route::get('/imagenes', [ImagenesController::class, 'index'])->name('imagenes.index');
 Route::post('/imagenes', [ImagenesController::class, 'store'])->name('imagenes.store');
 Route::delete('/imagenes/{id}', [ImagenesController::class, 'destroy'])->name('imagenes.destroy');
+
+
+// CRUD de Conciertos (Gestión - guarda en BD)
+Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
+    Route::get('/', [ConciertoController::class, 'index'])->name('index');
+    Route::get('/create', [ConciertoController::class, 'create'])->name('create');
+    Route::post('/', [ConciertoController::class, 'store'])->name('store');
+    Route::get('/{id}', [ConciertoController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [ConciertoController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [ConciertoController::class, 'update'])->name('update');
+    Route::delete('/{id}', [ConciertoController::class, 'destroy'])->name('destroy');
+});
