@@ -92,7 +92,7 @@
         <a href="/">TIKET MANIA</a>
         
          <a href="/imagenes">Imagenes</a>
-          <a href="/crud">CRUD</a>
+         <a href="/conciertos-crud">Gestión Conciertos</a>
         @auth
             <a href="/registro">Mi Cuenta</a>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
