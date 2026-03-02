@@ -246,7 +246,7 @@
                                 </span>
                             </td>
                             <td class="actions">
-                                <a href="{{ secure_url(route('conciertos-crud.show', $concierto->id)) }}" class="btn">Ver</a>
+                              
                                 <a href="{{ secure_url(route('conciertos-crud.edit', $concierto->id)) }}" class="btn btn-warning">Editar</a>
                                 
                                 <form action="{{ secure_url(route('conciertos-crud.destroy', $concierto->id)) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este concierto?');">
