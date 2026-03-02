@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiket Mania - Inicio</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Gestión de Conciertos - TIKET MANIA</title>
     <style>
         * {
             margin: 0;
@@ -32,34 +31,16 @@
             margin-right: 20px;
         }
 
-        .navbar button {
-            background: #555;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-        h1 { margin-bottom: 15px; }
-
-        p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .user-info {
-            background: #f9f9f9;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 30px;
             border: 1px solid #ddd;
+        }
+
+        h1 {
+            margin-bottom: 20px;
         }
 
         .btn {
@@ -68,10 +49,25 @@
             background: #333;
             color: white;
             text-decoration: none;
-            margin: 5px;
+            margin-bottom: 20px;
         }
 
-        .btn-secondary { background: #666; }
+        .btn:hover {
+            background: #555;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
 
         .success-message {
             background: #d4edda;
@@ -81,326 +77,258 @@
             border: 1px solid #c3e6cb;
         }
 
-        /* ══ SECCIÓN CONCIERTOS ══ */
-        .conciertos-section {
-            max-width: 900px;
-            margin: 20px auto 0;
-            background: white;
-            padding: 30px 40px;
-        }
-
-        .conciertos-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 12px;
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
             margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
         }
 
-        .conciertos-header h2 { font-size: 18px; color: #333; }
-
-        #totalInfo { font-size: 13px; color: #888; }
-
-        /* Tabla */
-        .tabla-conciertos {
+        table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            margin-top: 20px;
         }
 
-        .tabla-conciertos th {
+        th {
             background: #333;
             color: white;
-            padding: 10px 14px;
+            padding: 12px;
             text-align: left;
+            border: 1px solid #ddd;
         }
 
-        .tabla-conciertos td {
-            padding: 10px 14px;
-            border-bottom: 1px solid #eee;
-            color: #444;
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
         }
 
-        .tabla-conciertos tr:hover td { background: #f9f9f9; }
-
-        /* Badges */
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .badge-activo    { background: #d4edda; color: #155724; }
-        .badge-cancelado { background: #f8d7da; color: #721c24; }
-        .badge-agotado   { background: #fff3cd; color: #856404; }
-
-        /* Skeleton */
-        .skeleton-line {
-            height: 13px;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
-        }
-        @keyframes shimmer {
-            0%   { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        tr:nth-child(even) {
+            background: #f9f9f9;
         }
 
-        /* Estado vacío */
-        .estado-msg {
-            text-align: center;
-            padding: 32px;
-            color: #888;
-            font-size: 14px;
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
         }
 
-        /* Paginación */
+        .status-activo {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelado {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-agotado {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .actions {
+            white-space: nowrap;
+        }
+
+        .actions a, .actions button {
+            padding: 6px 12px;
+            margin-right: 5px;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Paginación mejorada */
         .pagination {
+            margin-top: 30px;
+            text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            gap: 5px;
             flex-wrap: wrap;
         }
 
-        .page-btn {
-            min-width: 36px;
-            height: 34px;
-            padding: 0 10px;
-            border: 1px solid #ddd;
-            background: white;
-            color: #333;
-            font-size: 13px;
-            font-family: Arial, sans-serif;
-            cursor: pointer;
+        .pagination a {
+            padding: 8px 12px;
+            background: #333;
+            color: white;
+            text-decoration: none;
             border-radius: 3px;
-            transition: background .15s, color .15s;
+            transition: background 0.3s;
         }
 
-        .page-btn:hover:not(:disabled) {
-            background: #333;
+        .pagination a:hover {
+            background: #555;
+        }
+
+        .pagination .active {
+            background: #007bff;
+            padding: 8px 12px;
+            border-radius: 3px;
             color: white;
-            border-color: #333;
+            font-weight: bold;
         }
 
-        .page-btn.active {
-            background: #333;
-            color: white;
-            border-color: #333;
-            font-weight: 700;
-            cursor: default;
+        .pagination .disabled {
+            padding: 8px 12px;
+            background: #ddd;
+            color: #999;
+            border-radius: 3px;
+            cursor: not-allowed;
         }
 
-        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .page-info { font-size: 13px; color: #888; padding: 0 6px; }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
-
-    <!-- Navbar (sin cambios) -->
     <div class="navbar">
-        <a href="/">TIKET MANIA</a>
-        <a href="/imagenes">Imagenes</a>
-        <a href="{{ route('conciertos-crud.index') }}">Conciertos crud</a>
-        @auth
-            <a href="/registro">Mi Cuenta</a>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit">Cerrar Sesión</button>
-            </form>
-        @else
-            <a href="/registro">Cuenta</a>
-            <a href="/login">Login</a>
-        @endauth
+        <a href="{{ secure_url('/') }}">TIKET MANIA</a>
+        <a href="{{ secure_url(route('conciertos-crud.index')) }}">Gestión Conciertos</a>
+        <a href="{{ secure_url(route('usuarios.index')) }}">Usuarios</a>
+        <a href="{{ secure_url(route('registro')) }}">Cuenta</a>
+        <a href="{{ secure_url(route('login')) }}">Login</a>
     </div>
 
     <x-breadcrumbs />
 
-    <!-- Bienvenida (sin cambios) -->
     <div class="container">
-        @if(session('success'))
-            <div class="success-message">✓ {{ session('success') }}</div>
+        <h1>📋 Gestión de Conciertos</h1>
+
+        @if (session('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
         @endif
 
-        <h1>Bienvenido a Tiket Mania</h1>
-        <p>Tu entrada a los mejores eventos, conciertos y experiencias inolvidables.</p>
-
-        @auth
-            <div class="user-info">
-                <p><strong>👤 Bienvenido, {{ Auth::user()->name }}!</strong></p>
-                <p>{{ Auth::user()->email }}</p>
+        @if (session('error'))
+            <div class="error-message">
+                {{ session('error') }}
             </div>
-            <a href="/conciertos" class="btn">🎟️ Ver Conciertos</a>
+        @endif
+
+        <a href="{{ secure_url(route('conciertos-crud.create')) }}" class="btn btn-success">+ Crear Nuevo Concierto</a>
+
+        @if($conciertos->count() > 0)
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Artista</th>
+                        <th>Ubicación</th>
+                        <th>Fecha</th>
+                        <th>Precio</th>
+                        <th>Disponibles</th>
+                        <th>Status</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($conciertos as $concierto)
+                        <tr>
+                            <td><strong>{{ $concierto->nombre }}</strong></td>
+                            <td>{{ $concierto->artista }}</td>
+                            <td>{{ $concierto->ubicacion }}</td>
+                            <td>{{ $concierto->fecha_evento->format('d/m/Y H:i') }}</td>
+                            <td>${{ number_format($concierto->precio, 2) }}</td>
+                            <td>{{ $concierto->boletos_disponibles }} / {{ $concierto->capacidad_total }}</td>
+                            <td>
+                                <span class="status-badge status-{{ $concierto->status }}">
+                                    {{ ucfirst($concierto->status) }}
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <a href="{{ secure_url(route('conciertos-crud.show', $concierto->id)) }}" class="btn">Ver</a>
+                                <a href="{{ secure_url(route('conciertos-crud.edit', $concierto->id)) }}" class="btn btn-warning">Editar</a>
+                                
+                                <form action="{{ secure_url(route('conciertos-crud.destroy', $concierto->id)) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este concierto?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <!-- Paginación Personalizada con Primera y Última -->
+            <div class="pagination">
+                {{-- Botón Primera Página --}}
+                @if ($conciertos->onFirstPage())
+                    <span class="disabled">« Primera</span>
+                @else
+                    <a href="{{ secure_url($conciertos->url(1)) }}">« Primera</a>
+                @endif
+
+                {{-- Botón Anterior --}}
+                @if ($conciertos->onFirstPage())
+                    <span class="disabled">‹ Anterior</span>
+                @else
+                    <a href="{{ secure_url($conciertos->previousPageUrl()) }}">‹ Anterior</a>
+                @endif
+
+                {{-- Números de Página --}}
+                @php
+                    $start = max($conciertos->currentPage() - 2, 1);
+                    $end = min($conciertos->currentPage() + 2, $conciertos->lastPage());
+                @endphp
+
+                @if ($start > 1)
+                    <a href="{{ secure_url($conciertos->url(1)) }}">1</a>
+                    @if ($start > 2)
+                        <span class="disabled">...</span>
+                    @endif
+                @endif
+
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $conciertos->currentPage())
+                        <span class="active">{{ $page }}</span>
+                    @else
+                        <a href="{{ secure_url($conciertos->url($page)) }}">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                @if ($end < $conciertos->lastPage())
+                    @if ($end < $conciertos->lastPage() - 1)
+                        <span class="disabled">...</span>
+                    @endif
+                    <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">{{ $conciertos->lastPage() }}</a>
+                @endif
+
+                {{-- Botón Siguiente --}}
+                @if ($conciertos->hasMorePages())
+                    <a href="{{ secure_url($conciertos->nextPageUrl()) }}">Siguiente ›</a>
+                @else
+                    <span class="disabled">Siguiente ›</span>
+                @endif
+
+                {{-- Botón Última Página --}}
+                @if ($conciertos->hasMorePages())
+                    <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">Última »</a>
+                @else
+                    <span class="disabled">Última »</span>
+                @endif
+            </div>
+
+            {{-- Info de registros --}}
+            <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                Mostrando {{ $conciertos->firstItem() }} a {{ $conciertos->lastItem() }} de {{ $conciertos->total() }} conciertos
+            </div>
         @else
-            <a href="/conciertos" class="btn">Explorar Eventos</a>
-            <a href="/registro" class="btn btn-secondary">Crear Cuenta</a>
-        @endauth
+            <div class="no-data">
+                <p>😕 No hay conciertos registrados todavía.</p>
+                <p>Crea tu primer concierto usando el botón de arriba.</p>
+            </div>
+        @endif
     </div>
-
-    <!-- ══ CONCIERTOS CARGADOS CON FETCH ══ -->
-    <div class="conciertos-section">
-        <div class="conciertos-header">
-            <h2>🎶 Próximos Conciertos</h2>
-            <span id="totalInfo"></span>
-        </div>
-
-        <table class="tabla-conciertos">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Artista</th>
-                    <th>Fecha</th>
-                    <th>Ubicación</th>
-                    <th>Precio</th>
-                    <th>Boletos</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody id="conciertosTbody"></tbody>
-        </table>
-
-        <div class="pagination" id="pagination"></div>
-    </div>
-
-    <script>
-        const CSRF = document.querySelector('meta[name="csrf-token"]').content;
-
-        // ── Skeletons ──────────────────────────────────────────────
-        function mostrarSkeletons() {
-            document.getElementById('conciertosTbody').innerHTML = Array(5).fill(`
-                <tr>
-                    <td><div class="skeleton-line" style="width:70%"></div></td>
-                    <td><div class="skeleton-line" style="width:60%"></div></td>
-                    <td><div class="skeleton-line" style="width:75%"></div></td>
-                    <td><div class="skeleton-line" style="width:65%"></div></td>
-                    <td><div class="skeleton-line" style="width:40%"></div></td>
-                    <td><div class="skeleton-line" style="width:35%"></div></td>
-                    <td><div class="skeleton-line" style="width:50%"></div></td>
-                </tr>
-            `).join('');
-            document.getElementById('pagination').innerHTML = '';
-            document.getElementById('totalInfo').textContent = '';
-        }
-
-        // ── Render filas ──────────────────────────────────────────
-        function renderFilas(conciertos) {
-            const tbody = document.getElementById('conciertosTbody');
-
-            if (!conciertos.length) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="estado-msg">🎭 No hay conciertos disponibles.</div>
-                        </td>
-                    </tr>`;
-                return;
-            }
-
-            tbody.innerHTML = conciertos.map(c => `
-                <tr>
-                    <td><strong>${c.nombre}</strong></td>
-                    <td>${c.artista}</td>
-                    <td>${formatFecha(c.fecha_evento)}</td>
-                    <td>${c.ubicacion}</td>
-                    <td>$${Number(c.precio).toLocaleString('es-MX')}</td>
-                    <td>${c.boletos_disponibles}</td>
-                    <td><span class="badge badge-${c.status}">${c.status}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        // ── Render paginación ──────────────────────────────────────
-        function renderPaginacion(paginaActual, ultimaPagina) {
-            const pag = document.getElementById('pagination');
-
-            if (ultimaPagina <= 1) { pag.innerHTML = ''; return; }
-
-            let html = `
-                <button class="page-btn"
-                    onclick="cargarConciertos(${paginaActual - 1})"
-                    ${paginaActual === 1 ? 'disabled' : ''}>
-                    ← Anterior
-                </button>`;
-
-            for (let i = 1; i <= ultimaPagina; i++) {
-                html += `
-                    <button class="page-btn ${i === paginaActual ? 'active' : ''}"
-                        onclick="cargarConciertos(${i})">
-                        ${i}
-                    </button>`;
-            }
-
-            html += `
-                <button class="page-btn"
-                    onclick="cargarConciertos(${paginaActual + 1})"
-                    ${paginaActual === ultimaPagina ? 'disabled' : ''}>
-                    Siguiente →
-                </button>
-                <span class="page-info">Página ${paginaActual} de ${ultimaPagina}</span>`;
-
-            pag.innerHTML = html;
-        }
-
-        // ── FETCH PRINCIPAL ────────────────────────────────────────
-        async function cargarConciertos(pagina = 1) {
-            mostrarSkeletons();
-
-            try {
-                const res = await fetch(`/api/conciertos?page=${pagina}`, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': CSRF,
-                    }
-                });
-
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-                const json = await res.json();
-
-                // Laravel paginate() devuelve: { data, total, last_page, current_page, ... }
-                const conciertos   = json.data      ?? json;
-                const total        = json.total      ?? conciertos.length;
-                const ultimaPagina = json.last_page  ?? 1;
-
-                document.getElementById('totalInfo').textContent =
-                    `${total} concierto${total !== 1 ? 's' : ''} en total`;
-
-                renderFilas(conciertos);
-                renderPaginacion(pagina, ultimaPagina);
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('conciertosTbody').innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="estado-msg">
-                                ⚠️ Error al cargar los datos.
-                                <a href="#" onclick="cargarConciertos(${pagina}); return false;"
-                                   style="color:#333; margin-left:6px;">Reintentar</a>
-                            </div>
-                        </td>
-                    </tr>`;
-            }
-        }
-
-        // ── Helper fecha ──────────────────────────────────────────
-        function formatFecha(str) {
-            return new Date(str).toLocaleDateString('es-MX', {
-                day: '2-digit', month: 'short', year: 'numeric'
-            });
-        }
-
-        // ── Arrancar al cargar la página ──────────────────────────
-        cargarConciertos(1);
-    </script>
-
 </body>
 </html>

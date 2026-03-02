@@ -58,4 +58,3 @@ Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
 });
 
 
-Route::get('/conciertos', [App\Http\Controllers\ConciertoController::class, 'apiIndex']);
