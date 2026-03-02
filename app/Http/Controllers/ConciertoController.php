@@ -200,6 +200,21 @@ class ConciertoController extends Controller
         }
     }
 
+
+
+
+
+public function apiIndex(Request $request)
+{
+    $conciertos = Concierto::orderBy('fecha_evento', 'asc')
+        ->paginate(5); // 5 por página, igual que el CRUD
+
+    return response()->json($conciertos);
+}
+
+
+
+
     /**
      * Eliminar concierto de BD
      */
