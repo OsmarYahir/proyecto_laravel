@@ -13,7 +13,7 @@ class ConciertoController extends Controller
      */
     public function index()
     {
-        $conciertos = Concierto::orderBy('fecha_evento', 'desc')->paginate(10);
+        $conciertos = Concierto::orderBy('fecha_evento', 'desc')->paginate(5);
         
         return view('conciertos-crud.index', compact('conciertos'));
     }
@@ -32,7 +32,7 @@ class ConciertoController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validaciones con REGEX
+            // Validaciones
             $validated = $request->validate([
                 'nombre' => [
                     'required',
@@ -77,10 +77,6 @@ class ConciertoController extends Controller
                 'status' => [
                     'required',
                     'in:activo,cancelado,agotado'
-                ],
-                'imagen_url' => [
-                    'nullable',
-                    'url'
                 ]
             ], [
                 'nombre.required' => 'El nombre del concierto es obligatorio',
@@ -164,8 +160,7 @@ class ConciertoController extends Controller
                 'precio' => 'required|numeric|min:0',
                 'capacidad_total' => 'required|integer|min:1',
                 'boletos_disponibles' => 'required|integer|min:0',
-                'status' => 'required|in:activo,cancelado,agotado',
-                'imagen_url' => 'nullable|url'
+                'status' => 'required|in:activo,cancelado,agotado'
             ], [
                 'nombre.required' => 'El nombre es obligatorio',
                 'artista.required' => 'El artista es obligatorio',
