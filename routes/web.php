@@ -53,7 +53,7 @@ Route::get('/conciertos-crud/json', [ConciertoController::class, 'indexJson'])
 Route::resource('conciertos-crud', ConciertoController::class);
 
 // CRUD de Conciertos (Gestión - guarda en BD)
-Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
+/*Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
     Route::get('/', [ConciertoController::class, 'index'])->name('index');
     Route::get('/create', [ConciertoController::class, 'create'])->name('create');
     Route::post('/', [ConciertoController::class, 'store'])->name('store');
@@ -62,6 +62,6 @@ Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
     Route::put('/{id}', [ConciertoController::class, 'update'])->name('update');
     Route::delete('/{id}', [ConciertoController::class, 'destroy'])->name('destroy');
 });
-
+*/
 
 
