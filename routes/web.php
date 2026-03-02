@@ -46,6 +46,12 @@ Route::post('/imagenes', [ImagenesController::class, 'store'])->name('imagenes.s
 Route::delete('/imagenes/{id}', [ImagenesController::class, 'destroy'])->name('imagenes.destroy');
 
 
+// ✅ DEBE ir ANTES del resource
+Route::get('/conciertos-crud/json', [ConciertoController::class, 'indexJson'])
+    ->name('conciertos-crud.json');
+
+Route::resource('conciertos-crud', ConciertoController::class);
+
 // CRUD de Conciertos (Gestión - guarda en BD)
 Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
     Route::get('/', [ConciertoController::class, 'index'])->name('index');
@@ -58,5 +64,3 @@ Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
 });
 
 
-Route::get('/conciertos-crud/json', [ConciertoController::class, 'indexJson'])
-    ->name('conciertos-crud.json');
