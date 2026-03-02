@@ -246,7 +246,7 @@
                                 </span>
                             </td>
                             <td class="actions">
-                              
+                                <a href="{{ secure_url(route('conciertos-crud.show', $concierto->id)) }}" class="btn">Ver</a>
                                 <a href="{{ secure_url(route('conciertos-crud.edit', $concierto->id)) }}" class="btn btn-warning">Editar</a>
                                 
                                 <form action="{{ secure_url(route('conciertos-crud.destroy', $concierto->id)) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este concierto?');">
@@ -261,70 +261,68 @@
             </table>
 
             <!-- Paginación Personalizada con Primera y Última -->
-            @if ($conciertos->lastPage() > 1)
-                <div class="pagination">
-                    {{-- Botón Primera Página --}}
-                    @if ($conciertos->onFirstPage())
-                        <span class="disabled">« Primera</span>
+            <div class="pagination">
+                {{-- Botón Primera Página --}}
+                @if ($conciertos->onFirstPage())
+                    <span class="disabled">« Primera</span>
+                @else
+                    <a href="{{ secure_url($conciertos->url(1)) }}">« Primera</a>
+                @endif
+
+                {{-- Botón Anterior --}}
+                @if ($conciertos->onFirstPage())
+                    <span class="disabled">‹ Anterior</span>
+                @else
+                    <a href="{{ secure_url($conciertos->previousPageUrl()) }}">‹ Anterior</a>
+                @endif
+
+                {{-- Números de Página --}}
+                @php
+                    $start = max($conciertos->currentPage() - 2, 1);
+                    $end = min($conciertos->currentPage() + 2, $conciertos->lastPage());
+                @endphp
+
+                @if ($start > 1)
+                    <a href="{{ secure_url($conciertos->url(1)) }}">1</a>
+                    @if ($start > 2)
+                        <span class="disabled">...</span>
+                    @endif
+                @endif
+
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $conciertos->currentPage())
+                        <span class="active">{{ $page }}</span>
                     @else
-                        <a href="{{ secure_url($conciertos->url(1)) }}">« Primera</a>
+                        <a href="{{ secure_url($conciertos->url($page)) }}">{{ $page }}</a>
                     @endif
+                @endfor
 
-                    {{-- Botón Anterior --}}
-                    @if ($conciertos->onFirstPage())
-                        <span class="disabled">‹ Anterior</span>
-                    @else
-                        <a href="{{ secure_url($conciertos->previousPageUrl()) }}">‹ Anterior</a>
+                @if ($end < $conciertos->lastPage())
+                    @if ($end < $conciertos->lastPage() - 1)
+                        <span class="disabled">...</span>
                     @endif
+                    <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">{{ $conciertos->lastPage() }}</a>
+                @endif
 
-                    {{-- Números de Página --}}
-                    @php
-                        $start = max($conciertos->currentPage() - 2, 1);
-                        $end = min($conciertos->currentPage() + 2, $conciertos->lastPage());
-                    @endphp
+                {{-- Botón Siguiente --}}
+                @if ($conciertos->hasMorePages())
+                    <a href="{{ secure_url($conciertos->nextPageUrl()) }}">Siguiente ›</a>
+                @else
+                    <span class="disabled">Siguiente ›</span>
+                @endif
 
-                    @if ($start > 1)
-                        <a href="{{ secure_url($conciertos->url(1)) }}">1</a>
-                        @if ($start > 2)
-                            <span class="disabled">...</span>
-                        @endif
-                    @endif
+                {{-- Botón Última Página --}}
+                @if ($conciertos->hasMorePages())
+                    <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">Última »</a>
+                @else
+                    <span class="disabled">Última »</span>
+                @endif
+            </div>
 
-                    @for ($page = $start; $page <= $end; $page++)
-                        @if ($page == $conciertos->currentPage())
-                            <span class="active">{{ $page }}</span>
-                        @else
-                            <a href="{{ secure_url($conciertos->url($page)) }}">{{ $page }}</a>
-                        @endif
-                    @endfor
-
-                    @if ($end < $conciertos->lastPage())
-                        @if ($end < $conciertos->lastPage() - 1)
-                            <span class="disabled">...</span>
-                        @endif
-                        <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">{{ $conciertos->lastPage() }}</a>
-                    @endif
-
-                    {{-- Botón Siguiente --}}
-                    @if ($conciertos->hasMorePages())
-                        <a href="{{ secure_url($conciertos->nextPageUrl()) }}">Siguiente ›</a>
-                    @else
-                        <span class="disabled">Siguiente ›</span>
-                    @endif
-
-                    {{-- Botón Última Página --}}
-                    @if ($conciertos->hasMorePages())
-                        <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">Última »</a>
-                    @else
-                        <span class="disabled">Última »</span>
-                    @endif
-                </div>
-
-                {{-- Info de registros --}}
-                <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
-                    Mostrando {{ $conciertos->firstItem() ?? 0 }} a {{ $conciertos->lastItem() ?? 0 }} de {{ $conciertos->total() }} conciertos
-                </div>
-            @endif
+            {{-- Info de registros --}}
+            <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                Mostrando {{ $conciertos->firstItem() }} a {{ $conciertos->lastItem() }} de {{ $conciertos->total() }} conciertos
+            </div>
         @else
             <div class="no-data">
                 <p>😕 No hay conciertos registrados todavía.</p>
