@@ -193,7 +193,7 @@
     <div class="navbar">
         <a href="{{ secure_url('/') }}">TIKET MANIA</a>
         <a href="{{ secure_url(route('conciertos-crud.index')) }}">Gestión Conciertos</a>
-        <a href="{{ secure_url(route('usuarios.index')) }}">Usuarios</a>
+       
         <a href="{{ secure_url(route('registro')) }}">Cuenta</a>
         <a href="{{ secure_url(route('login')) }}">Login</a>
     </div>
