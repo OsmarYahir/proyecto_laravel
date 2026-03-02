@@ -142,21 +142,44 @@
             cursor: pointer;
         }
 
+        /* Paginación mejorada */
         .pagination {
-            margin-top: 20px;
+            margin-top: 30px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
         }
 
         .pagination a {
             padding: 8px 12px;
-            margin: 0 2px;
             background: #333;
             color: white;
             text-decoration: none;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .pagination a:hover {
+            background: #555;
         }
 
         .pagination .active {
-            background: #666;
+            background: #007bff;
+            padding: 8px 12px;
+            border-radius: 3px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .pagination .disabled {
+            padding: 8px 12px;
+            background: #ddd;
+            color: #999;
+            border-radius: 3px;
+            cursor: not-allowed;
         }
 
         .no-data {
@@ -168,12 +191,14 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="/">TIKET MANIA</a>
-        <a href="/conciertos">Conciertos Públicos</a>
-        <a href="/conciertos-crud">Gestión Conciertos</a>
-        <a href="/usuarios">Usuarios</a>
-        <a href="/login">Login</a>
+        <a href="{{ secure_url('/') }}">TIKET MANIA</a>
+        <a href="{{ secure_url(route('conciertos-crud.index')) }}">Gestión Conciertos</a>
+        <a href="{{ secure_url(route('usuarios.index')) }}">Usuarios</a>
+        <a href="{{ secure_url(route('registro')) }}">Cuenta</a>
+        <a href="{{ secure_url(route('login')) }}">Login</a>
     </div>
+
+    <x-breadcrumbs />
 
     <div class="container">
         <h1>📋 Gestión de Conciertos</h1>
@@ -190,13 +215,12 @@
             </div>
         @endif
 
-        <a href="{{ route('conciertos-crud.create') }}" class="btn btn-success">+ Crear Nuevo Concierto</a>
+        <a href="{{ secure_url(route('conciertos-crud.create')) }}" class="btn btn-success">+ Crear Nuevo Concierto</a>
 
         @if($conciertos->count() > 0)
             <table>
                 <thead>
                     <tr>
-                      
                         <th>Nombre</th>
                         <th>Artista</th>
                         <th>Ubicación</th>
@@ -210,7 +234,6 @@
                 <tbody>
                     @foreach($conciertos as $concierto)
                         <tr>
-                           
                             <td><strong>{{ $concierto->nombre }}</strong></td>
                             <td>{{ $concierto->artista }}</td>
                             <td>{{ $concierto->ubicacion }}</td>
@@ -223,10 +246,10 @@
                                 </span>
                             </td>
                             <td class="actions">
-                                <a href="{{ route('conciertos-crud.show', $concierto->id) }}" class="btn">Ver</a>
-                                <a href="{{ route('conciertos-crud.edit', $concierto->id) }}" class="btn btn-warning">Editar</a>
+                                <a href="{{ secure_url(route('conciertos-crud.show', $concierto->id)) }}" class="btn">Ver</a>
+                                <a href="{{ secure_url(route('conciertos-crud.edit', $concierto->id)) }}" class="btn btn-warning">Editar</a>
                                 
-                                <form action="{{ route('conciertos-crud.destroy', $concierto->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este concierto?');">
+                                <form action="{{ secure_url(route('conciertos-crud.destroy', $concierto->id)) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar este concierto?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -237,10 +260,71 @@
                 </tbody>
             </table>
 
-            <!-- Paginación -->
-            <div class="pagination">
-                {{ $conciertos->links() }}
-            </div>
+            <!-- Paginación Personalizada con Primera y Última -->
+            @if ($conciertos->lastPage() > 1)
+                <div class="pagination">
+                    {{-- Botón Primera Página --}}
+                    @if ($conciertos->onFirstPage())
+                        <span class="disabled">« Primera</span>
+                    @else
+                        <a href="{{ secure_url($conciertos->url(1)) }}">« Primera</a>
+                    @endif
+
+                    {{-- Botón Anterior --}}
+                    @if ($conciertos->onFirstPage())
+                        <span class="disabled">‹ Anterior</span>
+                    @else
+                        <a href="{{ secure_url($conciertos->previousPageUrl()) }}">‹ Anterior</a>
+                    @endif
+
+                    {{-- Números de Página --}}
+                    @php
+                        $start = max($conciertos->currentPage() - 2, 1);
+                        $end = min($conciertos->currentPage() + 2, $conciertos->lastPage());
+                    @endphp
+
+                    @if ($start > 1)
+                        <a href="{{ secure_url($conciertos->url(1)) }}">1</a>
+                        @if ($start > 2)
+                            <span class="disabled">...</span>
+                        @endif
+                    @endif
+
+                    @for ($page = $start; $page <= $end; $page++)
+                        @if ($page == $conciertos->currentPage())
+                            <span class="active">{{ $page }}</span>
+                        @else
+                            <a href="{{ secure_url($conciertos->url($page)) }}">{{ $page }}</a>
+                        @endif
+                    @endfor
+
+                    @if ($end < $conciertos->lastPage())
+                        @if ($end < $conciertos->lastPage() - 1)
+                            <span class="disabled">...</span>
+                        @endif
+                        <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">{{ $conciertos->lastPage() }}</a>
+                    @endif
+
+                    {{-- Botón Siguiente --}}
+                    @if ($conciertos->hasMorePages())
+                        <a href="{{ secure_url($conciertos->nextPageUrl()) }}">Siguiente ›</a>
+                    @else
+                        <span class="disabled">Siguiente ›</span>
+                    @endif
+
+                    {{-- Botón Última Página --}}
+                    @if ($conciertos->hasMorePages())
+                        <a href="{{ secure_url($conciertos->url($conciertos->lastPage())) }}">Última »</a>
+                    @else
+                        <span class="disabled">Última »</span>
+                    @endif
+                </div>
+
+                {{-- Info de registros --}}
+                <div style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                    Mostrando {{ $conciertos->firstItem() ?? 0 }} a {{ $conciertos->lastItem() ?? 0 }} de {{ $conciertos->total() }} conciertos
+                </div>
+            @endif
         @else
             <div class="no-data">
                 <p>😕 No hay conciertos registrados todavía.</p>
