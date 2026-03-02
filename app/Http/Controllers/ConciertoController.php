@@ -201,17 +201,23 @@ class ConciertoController extends Controller
     }
 
 
-
-
-
-
-    public function apiIndex()
+public function indexJson(Request $request)
 {
-    $conciertos = Concierto::orderBy('fecha_evento', 'asc')
-        ->paginate(5);  // mismo número que el CRUD
-
-    return response()->json($conciertos);
+    $conciertos = Concierto::orderBy('fecha_evento', 'desc')->paginate(5);
+    
+    return response()->json([
+        'data' => $conciertos->items(),
+        'current_page' => $conciertos->currentPage(),
+        'last_page'    => $conciertos->lastPage(),
+        'total'        => $conciertos->total(),
+        'from'         => $conciertos->firstItem(),
+        'to'           => $conciertos->lastItem(),
+    ]);
 }
+
+
+
+    
 
 
 

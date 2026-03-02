@@ -57,13 +57,6 @@ Route::prefix('conciertos-crud')->name('conciertos-crud.')->group(function () {
     Route::delete('/{id}', [ConciertoController::class, 'destroy'])->name('destroy');
 });
 
-Route::get('/conciertos', [App\Http\Controllers\ConciertoController::class, 'apiIndex']);
 
-
-
-
-
-
-
-
-
+Route::get('/conciertos-crud/json', [ConciertoController::class, 'indexJson'])
+    ->name('conciertos-crud.json');

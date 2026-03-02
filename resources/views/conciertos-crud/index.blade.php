@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiket Mania - Inicio</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Gestión de Conciertos - TIKET MANIA</title>
     <style>
         * {
             margin: 0;
@@ -32,34 +31,16 @@
             margin-right: 20px;
         }
 
-        .navbar button {
-            background: #555;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-        h1 { margin-bottom: 15px; }
-
-        p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .user-info {
-            background: #f9f9f9;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 30px;
             border: 1px solid #ddd;
+        }
+
+        h1 {
+            margin-bottom: 20px;
         }
 
         .btn {
@@ -68,10 +49,25 @@
             background: #333;
             color: white;
             text-decoration: none;
-            margin: 5px;
+            margin-bottom: 20px;
         }
 
-        .btn-secondary { background: #666; }
+        .btn:hover {
+            background: #555;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
 
         .success-message {
             background: #d4edda;
@@ -81,24 +77,18 @@
             border: 1px solid #c3e6cb;
         }
 
-        /* ══ SECCIÓN CONCIERTOS ══ */
-        .conciertos-section {
-            max-width: 1200px;
-            margin: 20px auto 0;
-            background: white;
-            padding: 30px;
-            border: 1px solid #ddd;
-        }
-
-        .conciertos-section h2 {
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
             margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
         }
 
-        /* Tabla */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         th {
@@ -114,9 +104,10 @@
             border: 1px solid #ddd;
         }
 
-        tr:nth-child(even) { background: #f9f9f9; }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
 
-        /* Badges */
         .status-badge {
             padding: 4px 8px;
             border-radius: 3px;
@@ -124,32 +115,34 @@
             font-weight: bold;
         }
 
-        .status-activo    { background: #d4edda; color: #155724; }
-        .status-cancelado { background: #f8d7da; color: #721c24; }
-        .status-agotado   { background: #fff3cd; color: #856404; }
-
-        /* Skeleton */
-        .skeleton-line {
-            height: 13px;
-            border-radius: 3px;
-            background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
+        .status-activo {
+            background: #d4edda;
+            color: #155724;
         }
 
-        @keyframes shimmer {
-            0%   { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .status-cancelado {
+            background: #f8d7da;
+            color: #721c24;
         }
 
-        /* Estado vacío / error */
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #666;
+        .status-agotado {
+            background: #fff3cd;
+            color: #856404;
         }
 
-        /* ══ PAGINACIÓN — igual que el CRUD ══ */
+        .actions {
+            white-space: nowrap;
+        }
+
+        .actions a, .actions button {
+            padding: 6px 12px;
+            margin-right: 5px;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Paginación mejorada */
         .pagination {
             margin-top: 30px;
             text-align: center;
@@ -160,94 +153,68 @@
             flex-wrap: wrap;
         }
 
-        .pagination button {
+        .pagination a {
             padding: 8px 12px;
             background: #333;
             color: white;
-            border: none;
+            text-decoration: none;
             border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-            transition: background 0.2s;
+            transition: background 0.3s;
         }
 
-        .pagination button:hover:not(:disabled) {
+        .pagination a:hover {
             background: #555;
         }
 
-        .pagination button.active {
+        .pagination .active {
             background: #007bff;
+            padding: 8px 12px;
+            border-radius: 3px;
+            color: white;
             font-weight: bold;
-            cursor: default;
         }
 
-        .pagination button:disabled {
+        .pagination .disabled {
+            padding: 8px 12px;
             background: #ddd;
             color: #999;
+            border-radius: 3px;
             cursor: not-allowed;
         }
 
-        .pagination .dots {
-            padding: 8px 6px;
-            color: #999;
-            font-size: 14px;
-        }
-
-        .pagination-info {
+        .no-data {
             text-align: center;
-            margin-top: 15px;
+            padding: 40px;
             color: #666;
-            font-size: 14px;
         }
     </style>
 </head>
 <body>
-
-    <!-- Navbar (sin cambios) -->
     <div class="navbar">
-        <a href="/">TIKET MANIA</a>
-        <a href="/imagenes">Imagenes</a>
-        <a href="{{ route('conciertos-crud.index') }}">Conciertos crud</a>
-        @auth
-            <a href="/registro">Mi Cuenta</a>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit">Cerrar Sesión</button>
-            </form>
-        @else
-            <a href="/registro">Cuenta</a>
-            <a href="/login">Login</a>
-        @endauth
+        <a href="{{ secure_url('/') }}">TIKET MANIA</a>
+        <a href="{{ secure_url(route('conciertos-crud.index')) }}">Gestión Conciertos</a>
+       
+        <a href="{{ secure_url(route('registro')) }}">Cuenta</a>
+        <a href="{{ secure_url(route('login')) }}">Login</a>
     </div>
 
     <x-breadcrumbs />
 
-    <!-- Bienvenida (sin cambios) -->
     <div class="container">
-        @if(session('success'))
-            <div class="success-message">✓ {{ session('success') }}</div>
-        @endif
+    <h1>📋 Gestión de Conciertos</h1>
 
-        <h1>Bienvenido a Tiket Mania</h1>
-        <p>Tu entrada a los mejores eventos, conciertos y experiencias inolvidables.</p>
+    @if (session('success'))
+        <div class="success-message">{{ session('success') }}</div>
+    @endif
 
-        @auth
-            <div class="user-info">
-                <p><strong>👤 Bienvenido, {{ Auth::user()->name }}!</strong></p>
-                <p>{{ Auth::user()->email }}</p>
-            </div>
-            <a href="/conciertos" class="btn">🎟️ Ver Conciertos</a>
-        @else
-            <a href="/conciertos" class="btn">Explorar Eventos</a>
-            <a href="/registro" class="btn btn-secondary">Crear Cuenta</a>
-        @endauth
-    </div>
+    @if (session('error'))
+        <div class="error-message">{{ session('error') }}</div>
+    @endif
 
-    <!-- ══ CONCIERTOS CON FETCH ══ -->
-    <div class="conciertos-section">
-        <h2>🎶 Próximos Conciertos</h2>
+    <a href="{{ secure_url(route('conciertos-crud.create')) }}" class="btn btn-success">+ Crear Nuevo Concierto</a>
 
+    {{-- ✅ Sin @if — el JS decide si hay datos o no --}}
+    <div id="tabla-container">
         <table>
             <thead>
                 <tr>
@@ -256,179 +223,121 @@
                     <th>Ubicación</th>
                     <th>Fecha</th>
                     <th>Precio</th>
-                    <th>Boletos</th>
+                    <th>Disponibles</th>
                     <th>Status</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="conciertosTbody">
-                <!-- fetch lo llena -->
+            <tbody id="tabla-body">
+                <tr><td colspan="8" class="no-data">Cargando...</td></tr>
             </tbody>
         </table>
 
-        <!-- Paginación igual que el CRUD -->
         <div class="pagination" id="pagination"></div>
-        <div class="pagination-info" id="paginacionInfo"></div>
-    </div>
+        <div style="text-align:center;margin-top:15px;color:#666;font-size:14px;" id="pagination-info"></div>
+    </div>  {{-- ✅ Cierra tabla-container --}}
 
-    <script>
-        const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+</div>  {{-- ✅ Cierra .container --}}
 
-        // ── Skeletons ───────────────────────────────────────────────
-        function mostrarSkeletons() {
-            document.getElementById('conciertosTbody').innerHTML = Array(5).fill(`
-                <tr>
-                    <td><div class="skeleton-line" style="width:70%"></div></td>
-                    <td><div class="skeleton-line" style="width:60%"></div></td>
-                    <td><div class="skeleton-line" style="width:65%"></div></td>
-                    <td><div class="skeleton-line" style="width:55%"></div></td>
-                    <td><div class="skeleton-line" style="width:40%"></div></td>
-                    <td><div class="skeleton-line" style="width:35%"></div></td>
-                    <td><div class="skeleton-line" style="width:45%"></div></td>
-                </tr>
-            `).join('');
-            document.getElementById('pagination').innerHTML = '';
-            document.getElementById('paginacionInfo').textContent = '';
+<script>
+     const JSON_URL = "{{ secure_url(route('conciertos-crud.json')) }}";
+
+    async function loadPage(page = 1) {
+        try {
+            const res  = await fetch(`${JSON_URL}?page=${page}`);
+            const data = await res.json();
+            renderTable(data);
+            renderPagination(data);
+        } catch (e) {
+            document.getElementById('tabla-body').innerHTML =
+                '<tr><td colspan="8" class="no-data">Error al cargar datos.</td></tr>';
         }
+    }
 
-        // ── Render filas ────────────────────────────────────────────
-        function renderFilas(conciertos) {
-            const tbody = document.getElementById('conciertosTbody');
+    function statusBadge(status) {
+        const labels = { activo: 'Activo', cancelado: 'Cancelado', agotado: 'Agotado' };
+        return `<span class="status-badge status-${status}">${labels[status] ?? status}</span>`;
+    }
 
-            if (!conciertos.length) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="no-data">
-                                <p>😕 No hay conciertos registrados todavía.</p>
-                            </div>
-                        </td>
-                    </tr>`;
-                return;
-            }
-
-            tbody.innerHTML = conciertos.map(c => `
-                <tr>
-                    <td><strong>${c.nombre}</strong></td>
-                    <td>${c.artista}</td>
-                    <td>${c.ubicacion}</td>
-                    <td>${formatFecha(c.fecha_evento)}</td>
-                    <td>$${Number(c.precio).toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
-                    <td>${c.boletos_disponibles} / ${c.capacidad_total}</td>
-                    <td>
-                        <span class="status-badge status-${c.status}">
-                            ${c.status.charAt(0).toUpperCase() + c.status.slice(1)}
-                        </span>
-                    </td>
-                </tr>
-            `).join('');
+    function renderTable({ data, from }) {
+        const tbody = document.getElementById('tabla-body');
+        if (!data.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="no-data">😕 No hay conciertos registrados.</td></tr>';
+            return;
         }
-
-        // ── Render paginación (igual al CRUD) ───────────────────────
-        function renderPaginacion(actual, ultima, total, desde, hasta) {
-            const pag  = document.getElementById('pagination');
-            const info = document.getElementById('paginacionInfo');
-
-            // Info debajo
-            info.textContent = `Mostrando ${desde} a ${hasta} de ${total} conciertos`;
-
-            if (ultima <= 1) { pag.innerHTML = ''; return; }
-
-            // Rango de páginas a mostrar (±2 de la actual)
-            const start = Math.max(actual - 2, 1);
-            const end   = Math.min(actual + 2, ultima);
-
-            let html = '';
-
-            // « Primera
-            html += `<button ${actual === 1 ? 'disabled' : ''}
-                        onclick="cargarConciertos(1)">« Primera</button>`;
-
-            // ‹ Anterior
-            html += `<button ${actual === 1 ? 'disabled' : ''}
-                        onclick="cargarConciertos(${actual - 1})">‹ Anterior</button>`;
-
-            // Primer número + puntos si hace falta
-            if (start > 1) {
-                html += `<button onclick="cargarConciertos(1)">1</button>`;
-                if (start > 2) html += `<span class="dots">...</span>`;
-            }
-
-            // Números del rango
-            for (let i = start; i <= end; i++) {
-                html += `<button class="${i === actual ? 'active' : ''}"
-                            onclick="cargarConciertos(${i})">${i}</button>`;
-            }
-
-            // Puntos + último número si hace falta
-            if (end < ultima) {
-                if (end < ultima - 1) html += `<span class="dots">...</span>`;
-                html += `<button onclick="cargarConciertos(${ultima})">${ultima}</button>`;
-            }
-
-            // Siguiente ›
-            html += `<button ${actual === ultima ? 'disabled' : ''}
-                        onclick="cargarConciertos(${actual + 1})">Siguiente ›</button>`;
-
-            // Última »
-            html += `<button ${actual === ultima ? 'disabled' : ''}
-                        onclick="cargarConciertos(${ultima})">Última »</button>`;
-
-            pag.innerHTML = html;
-        }
-
-        // ── FETCH PRINCIPAL ─────────────────────────────────────────
-        async function cargarConciertos(pagina = 1) {
-            mostrarSkeletons();
-
-            try {
-                const res = await fetch(`/api/conciertos?page=${pagina}`, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': CSRF,
-                    }
-                });
-
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-                // Laravel paginate() devuelve:
-                // { data, current_page, last_page, total, from, to, per_page }
-                const json = await res.json();
-
-                renderFilas(json.data);
-                renderPaginacion(
-                    json.current_page,
-                    json.last_page,
-                    json.total,
-                    json.from,
-                    json.to
-                );
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('conciertosTbody').innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="no-data">
-                                ⚠️ Error al cargar los datos.
-                                <a href="#" onclick="cargarConciertos(${pagina}); return false;"
-                                   style="color:#333;">Reintentar</a>
-                            </div>
-                        </td>
-                    </tr>`;
-            }
-        }
-
-        // ── Helper fecha ────────────────────────────────────────────
-        function formatFecha(str) {
-            return new Date(str).toLocaleDateString('es-MX', {
-                day: '2-digit', month: '2-digit', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
+        tbody.innerHTML = data.map(c => {
+            const fecha = new Date(c.fecha_evento).toLocaleString('es-MX', {
+                day:'2-digit', month:'2-digit', year:'numeric',
+                hour:'2-digit', minute:'2-digit'
             });
+            const precio = parseFloat(c.precio).toLocaleString('es-MX', {
+                minimumFractionDigits: 2
+            });
+            return `
+            <tr>
+                <td><strong>${c.nombre}</strong></td>
+                <td>${c.artista}</td>
+                <td>${c.ubicacion}</td>
+                <td>${fecha}</td>
+                <td>$${precio}</td>
+                <td>${c.boletos_disponibles} / ${c.capacidad_total}</td>
+                <td>${statusBadge(c.status)}</td>
+                <td class="actions">
+                    <a href="/conciertos-crud/${c.id}" class="btn">Ver</a>
+                    <a href="/conciertos-crud/${c.id}/edit" class="btn btn-warning">Editar</a>
+                    <form action="/conciertos-crud/${c.id}" method="POST" style="display:inline"
+                          onsubmit="return confirm('¿Eliminar este concierto?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function renderPagination({ current_page, last_page, from, to, total }) {
+        document.getElementById('pagination-info').textContent =
+            total ? `Mostrando ${from} a ${to} de ${total} conciertos` : '';
+
+        const pg = document.getElementById('pagination');
+        let html = '';
+
+        const btn = (page, label, disabled = false) =>
+            disabled
+                ? `<span class="disabled">${label}</span>`
+                : `<a href="#" onclick="loadPage(${page});return false;">${label}</a>`;
+
+        const active = (page, label) =>
+            `<span class="active">${label}</span>`;
+
+        html += btn(1,            '« Primera',   current_page === 1);
+        html += btn(current_page - 1, '‹ Anterior', current_page === 1);
+
+        const start = Math.max(current_page - 2, 1);
+        const end   = Math.min(current_page + 2, last_page);
+
+        if (start > 1) {
+            html += btn(1, '1');
+            if (start > 2) html += `<span class="disabled">...</span>`;
+        }
+        for (let p = start; p <= end; p++) {
+            html += p === current_page ? active(p, p) : btn(p, p);
+        }
+        if (end < last_page) {
+            if (end < last_page - 1) html += `<span class="disabled">...</span>`;
+            html += btn(last_page, last_page);
         }
 
-        // ── Arrancar ────────────────────────────────────────────────
-        cargarConciertos(1);
-    </script>
+        html += btn(current_page + 1, 'Siguiente ›', current_page === last_page);
+        html += btn(last_page,        'Última »',     current_page === last_page);
+
+        pg.innerHTML = html;
+    }
+
+    // Carga inicial
+    loadPage(1);
+</script>
 
 </body>
 </html>
