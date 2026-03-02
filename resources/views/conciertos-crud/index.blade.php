@@ -259,42 +259,100 @@
         return `<span class="status-badge status-${status}">${labels[status] ?? status}</span>`;
     }
 
-    function renderTable({ data, from }) {
-        const tbody = document.getElementById('tabla-body');
-        if (!data.length) {
-            tbody.innerHTML = '<tr><td colspan="8" class="no-data">😕 No hay conciertos registrados.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = data.map(c => {
-            const fecha = new Date(c.fecha_evento).toLocaleString('es-MX', {
-                day:'2-digit', month:'2-digit', year:'numeric',
-                hour:'2-digit', minute:'2-digit'
-            });
-            const precio = parseFloat(c.precio).toLocaleString('es-MX', {
-                minimumFractionDigits: 2
-            });
-            return `
-            <tr>
-                <td><strong>${c.nombre}</strong></td>
-                <td>${c.artista}</td>
-                <td>${c.ubicacion}</td>
-                <td>${fecha}</td>
-                <td>$${precio}</td>
-                <td>${c.boletos_disponibles} / ${c.capacidad_total}</td>
-                <td>${statusBadge(c.status)}</td>
-                <td class="actions">
-                    <a href="/conciertos-crud/${c.id}" class="btn">Ver</a>
-                    <a href="/conciertos-crud/${c.id}/edit" class="btn btn-warning">Editar</a>
-                    <form action="/conciertos-crud/${c.id}" method="POST" style="display:inline"
-                          onsubmit="return confirm('¿Eliminar este concierto?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </td>
-            </tr>`;
-        }).join('');
+   function renderTable({ data }) {
+    const tbody = document.getElementById('tabla-body');
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="no-data">😕 No hay conciertos registrados.</td></tr>';
+        return;
     }
+    tbody.innerHTML = data.map(c => {
+        const fecha = new Date(c.fecha_evento).toLocaleString('es-MX', {
+            day:'2-digit', month:'2-digit', year:'numeric',
+            hour:'2-digit', minute:'2-digit'
+        });
+        const precio = parseFloat(c.precio).toLocaleString('es-MX', {
+            minimumFractionDigits: 2
+        });
+        return `
+        <tr id="fila-${c.id}">
+            <td><strong>${c.nombre}</strong></td>
+            <td>${c.artista}</td>
+            <td>${c.ubicacion}</td>
+            <td>${fecha}</td>
+            <td>$${precio}</td>
+            <td>${c.boletos_disponibles} / ${c.capacidad_total}</td>
+            <td>${statusBadge(c.status)}</td>
+            <td class="actions">
+                <a href="/conciertos-crud/${c.id}" class="btn">Ver</a>
+                <a href="/conciertos-crud/${c.id}/edit" class="btn btn-warning">Editar</a>
+                <button class="btn btn-danger" onclick="eliminarConcierto(${c.id}, '${c.nombre.replace(/'/g, "\\'")}')">
+                    Eliminar
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+
+    let currentPage = 1; // ✅ Guarda la página actual
+
+async function loadPage(page = 1) {
+    currentPage = page; // ✅ Actualiza la página actual
+    try {
+        const res  = await fetch(`${JSON_URL}?page=${page}`);
+        const data = await res.json();
+        renderTable(data);
+        renderPagination(data);
+    } catch (e) {
+        document.getElementById('tabla-body').innerHTML =
+            '<tr><td colspan="8" class="no-data">Error al cargar datos.</td></tr>';
+    }
+}
+
+async function eliminarConcierto(id, nombre) {
+    if (!confirm(`¿Eliminar el concierto "${nombre}"?`)) return;
+
+    try {
+        const res = await fetch(`/conciertos-crud/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        });
+
+        if (res.ok) {
+            // ✅ Muestra mensaje de éxito temporal
+            mostrarMensaje('success', `✓ Concierto "${nombre}" eliminado exitosamente.`);
+            // ✅ Recarga la página actual sin recargar el navegador
+            loadPage(currentPage);
+        } else {
+            mostrarMensaje('error', '❌ Error al eliminar. Intenta de nuevo.');
+        }
+    } catch (e) {
+        mostrarMensaje('error', '❌ Error de conexión.');
+    }
+}
+
+function mostrarMensaje(tipo, texto) {
+    // Elimina mensaje anterior si existe
+    const anterior = document.getElementById('flash-message');
+    if (anterior) anterior.remove();
+
+    const div = document.createElement('div');
+    div.id = 'flash-message';
+    div.className = tipo === 'success' ? 'success-message' : 'error-message';
+    div.textContent = texto;
+
+    // Lo inserta arriba de la tabla
+    const container = document.getElementById('tabla-container');
+    container.insertBefore(div, container.firstChild);
+
+    // ✅ Desaparece solo a los 3 segundos
+    setTimeout(() => div.remove(), 3000);
+}
+
 
     function renderPagination({ current_page, last_page, from, to, total }) {
         document.getElementById('pagination-info').textContent =

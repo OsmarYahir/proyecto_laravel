@@ -224,29 +224,26 @@ public function indexJson(Request $request)
     /**
      * Eliminar concierto de BD
      */
-    public function destroy($id)
-    {
-        try {
-            $concierto = Concierto::findOrFail($id);
-            $nombre = $concierto->nombre;
-            
-            $concierto->delete();
+   public function destroy($id)
+{
+    try {
+        $concierto = Concierto::findOrFail($id);
+        $nombre = $concierto->nombre;
+        $concierto->delete();
 
-            Log::info('Concierto eliminado', [
-                'id' => $id,
-                'nombre' => $nombre
-            ]);
-
-            return redirect()
-                ->route('conciertos-crud.index')
-                ->with('success', "✓ Concierto '{$nombre}' eliminado exitosamente.");
-
-        } catch (\Exception $e) {
-            Log::error('Error eliminando concierto', [
-                'error' => $e->getMessage()
-            ]);
-            
-            return back()->with('error', '❌ Error al eliminar. Intenta de nuevo.');
+        // ✅ Si es fetch (Accept: application/json), retorna JSON
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true, 'nombre' => $nombre]);
         }
+
+        return redirect()->route('conciertos-crud.index')
+            ->with('success', "✓ Concierto '{$nombre}' eliminado exitosamente.");
+
+    } catch (\Exception $e) {
+        if (request()->expectsJson()) {
+            return response()->json(['success' => false], 500);
+        }
+        return back()->with('error', '❌ Error al eliminar.');
     }
+}
 }
